@@ -10,10 +10,8 @@ vim.o.winborder = 'rounded'
 vim.o.undofile = true
 vim.o.undodir = vim.fn.stdpath('config') .. '/undo'
 
--- root namespace
 vim.g.mapleader = " "
 
--- find namespace
 vim.keymap.set('n', '<leader>ff', function() FzfLua.files() end)
 vim.keymap.set('n', '<leader>fb', function() FzfLua.buffers() end)
 vim.keymap.set('n', '<leader>fw', function() FzfLua.lgrep_curbuf() end)
@@ -22,10 +20,8 @@ vim.keymap.set('n', '<leader>fs', function() FzfLua.lsp_document_symbols() end)
 vim.keymap.set('n', '<leader>fS', function() FzfLua.lsp_live_workspace_symbols() end)
 vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
 
--- lsp namespace
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
 
--- buffer namespace
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -35,7 +31,6 @@ vim.keymap.set('n', '<leader>bo', function()
 	end
 end, { desc = "Delete other buffers" })
 
--- ergonomics
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
@@ -48,9 +43,10 @@ vim.pack.add({
 	{ src = github("ibhagwan/fzf-lua") },
 })
 
--- format on save
 vim.api.nvim_create_autocmd('BufWritePre', {
+	group = vim.api.nvim_create_augroup('format_on_save', { clear = true }),
 	pattern = '*',
+	desc = 'Format on save',
 	callback = function()
 		local _, _ = pcall(vim.lsp.buf.format, { async = false })
 	end,
@@ -62,40 +58,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	desc = 'Highlight selection on yank',
 	callback = function()
 		vim.highlight.on_yank({ timeout = 100, visual = true })
-	end,
-})
-
--- ide like highlight when stopping cursor
-vim.api.nvim_create_autocmd("CursorMoved", {
-	group = vim.api.nvim_create_augroup("LspReferenceHighlight", { clear = true }),
-	desc = "Highlight references under cursor",
-	callback = function()
-		-- Only run if the cursor is not in insert mode
-		if vim.fn.mode() ~= "i" then
-			local clients = vim.lsp.get_clients({ bufnr = 0 })
-			local supports_highlight = false
-			for _, client in ipairs(clients) do
-				if client.server_capabilities.documentHighlightProvider then
-					supports_highlight = true
-					break -- Found a supporting client, no need to check others
-				end
-			end
-
-			-- 3. Proceed only if an LSP is active AND supports the feature
-			if supports_highlight then
-				vim.lsp.buf.clear_references()
-				vim.lsp.buf.document_highlight()
-			end
-		end
-	end,
-})
-
--- ide like highlight when stopping cursor
-vim.api.nvim_create_autocmd("CursorMovedI", {
-	group = "LspReferenceHighlight",
-	desc = "Clear highlights when entering insert mode",
-	callback = function()
-		vim.lsp.buf.clear_references()
 	end,
 })
 
