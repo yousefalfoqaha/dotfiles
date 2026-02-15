@@ -33,7 +33,7 @@ vim.keymap.set('n', '<leader>bo', function()
 			vim.api.nvim_buf_delete(buf, { force = true })
 		end
 	end
-end, { desc = "Delete all other buffers" })
+end, { desc = "Delete other buffers" })
 
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
