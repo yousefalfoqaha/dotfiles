@@ -8,6 +8,10 @@
       "rev": "5921997472574fca3880b62949eb8679dc6f5afc",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
+    "indent-blankline.nvim": {
+      "rev": "005b56001b2cb30bfa61b7986bc50657816ba4ba",
+      "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
+    },
     "lualine.nvim": {
       "rev": "47f91c416daef12db467145e16bed5bbfe00add8",
       "src": "https://github.com/nvim-lualine/lualine.nvim"

@@ -7,6 +7,8 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = 'rounded'
+vim.o.undofile = true
+vim.o.undodir = vim.fn.stdpath('config') .. '/undo'
 
 -- root namespace
 vim.g.mapleader = " "
@@ -51,6 +53,15 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 	pattern = '*',
 	callback = function()
 		local _, _ = pcall(vim.lsp.buf.format, { async = false })
+	end,
+})
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+	group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
+	pattern = '*',
+	desc = 'Highlight selection on yank',
+	callback = function()
+		vim.highlight.on_yank({ timeout = 100, visual = true })
 	end,
 })
 
