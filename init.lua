@@ -23,9 +23,7 @@ vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
 -- lsp namespace
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
 
--- ergonomics
-vim.keymap.set('n', '<C-u>', '<C-u>zz')
-vim.keymap.set('n', '<C-d>', '<C-d>zz')
+-- buffer namespace
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -34,6 +32,10 @@ vim.keymap.set('n', '<leader>bo', function()
 		end
 	end
 end, { desc = "Delete other buffers" })
+
+-- ergonomics
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
