@@ -9,8 +9,10 @@ vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = 'rounded'
 
 vim.g.mapleader = " "
+
 vim.keymap.set('n', '<leader>o', vim.cmd.so)
 vim.keymap.set('n', '<leader>e', vim.cmd.Ex)
+vim.keymap.set('n', '<leader>f', ':find **/')
 
 vim.keymap.set({'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
