@@ -8,23 +8,46 @@ vim.o.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = 'rounded'
 
+-- leader
 vim.g.mapleader = " "
 
-vim.keymap.set('n', '<leader>e', vim.cmd.Ex)
-vim.keymap.set('n', '<leader>f', ':find **/')
-vim.keymap.set('n', '<leader>cf', function()
-	vim.lsp.buf.format({ async = false })
-end)
-vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "Code actions" })
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Goo to definition" })
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, { desc = "Goo to references" })
-vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
-vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
+-- fuzzy find
+vim.keymap.set('n', '<leader>ff', function() FzfLua.files() end)
+vim.keymap.set('n', '<leader>fb', function() FzfLua.buffers() end)
+vim.keymap.set('n', '<leader>fw', function() FzfLua.live_grep() end)
+vim.keymap.set('n', '<leader>fc', function() FzfLua.lgrep_curbuf() end)
+vim.keymap.set('n', '<leader>fq', function() FzfLua.quickfix() end)
+vim.keymap.set('n', '<leader>fl', function() FzfLua.loclist() end)
+vim.keymap.set('n', '<leader>fs', function() FzfLua.lsp_document_symbols() end)
+vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
+
+-- code
+vim.keymap.set('n', '<leader>cf', function() vim.lsp.buf.format() end)
 
 vim.pack.add({
 	{ src = "https://github.com/shaunsingh/nord.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/ibhagwan/fzf-lua" },
 })
 
+vim.api.nvim_create_autocmd('LspAttach', {
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client.id)
+		if client:supports_method('textDocument/completion') then
+			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+		end
+	end,
+})
+vim.cmd("set completeopt+=noselect")
+
+require("fzf-lua")
+-- require("nvim-treesitter.config").setup({
+-- 	ensure_installed = { "java" },
+-- 	highlight = { enable = true },
+-- 	install_dir = vim.fin.stdpath('data') .. '/site'
+-- })
+
 vim.lsp.enable({ "lua_ls", "jdtls" })
+
 vim.cmd("colorscheme nord")
