@@ -16,6 +16,7 @@ vim.g.netrw_liststyle = 3
 vim.o.wildignorecase = true
 vim.o.wildmenu = true
 vim.g.mapleader = " "
+vim.o.grepprg = "rg --vimgrep"
 
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
 vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition() end)
@@ -65,11 +66,11 @@ vim.pack.add({
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("nordtheme/vim") },
 	{ src = github("kepano/flexoki-neovim") },
+	{ src = github("norcalli/nvim-colorizer.lua") },
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
-	{ src = github("norcalli/nvim-colorizer.lua") },
 })
 
 require('mason').setup()
