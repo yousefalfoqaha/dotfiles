@@ -8,7 +8,7 @@ vim.o.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = 'rounded'
 vim.o.undofile = true
-vim.o.undodir = vim.fn.stdpath('config') .. '/undo'
+vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 
 vim.g.mapleader = " "
 
@@ -34,15 +34,6 @@ end, { desc = "Delete other buffers" })
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
-local github = function(x) return 'https://github.com/' .. x end
-vim.pack.add({
-	{ src = github("nvim-tree/nvim-web-devicons") },
-	{ src = github("loctvl842/monokai-pro.nvim") },
-	{ src = github("shaunsingh/nord.nvim") },
-	{ src = github("neovim/nvim-lspconfig") },
-	{ src = github("ibhagwan/fzf-lua") },
-})
-
 vim.api.nvim_create_autocmd('BufWritePre', {
 	group = vim.api.nvim_create_augroup('format_on_save', { clear = true }),
 	pattern = '*',
@@ -61,8 +52,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+local github = function(x) return 'https://github.com/' .. x end
+vim.pack.add({
+	{ src = github("nvim-tree/nvim-web-devicons") },
+	{ src = github("loctvl842/monokai-pro.nvim") },
+	{ src = github("nordtheme/vim") },
+	{ src = github("neovim/nvim-lspconfig") },
+	{ src = github("mason-org/mason.nvim") },
+	{ src = github("mason-org/mason-lspconfig.nvim") },
+	{ src = github("ibhagwan/fzf-lua") },
+})
+
 require('fzf-lua')
+require('mason').setup()
+require('mason-lspconfig').setup({
+	ensure_installed = { "jdtls", "lua_ls" }
+})
 
-vim.lsp.enable({ "lua_ls", "jdtls" })
-
-vim.cmd("colorscheme monokai-pro")
+vim.cmd("colorscheme nord")
