@@ -24,14 +24,7 @@ vim.keymap.set('n', '<leader>fS', function() FzfLua.lsp_live_workspace_symbols()
 vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
 
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
-
-vim.keymap.set('n', '<leader>c', function()
-	vim.ui.input({ prompt = "Colorscheme: " }, function(name)
-		if name then
-			pcall(vim.cmd.colorscheme, name)
-		end
-	end)
-end)
+vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition() end)
 
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
@@ -92,4 +85,5 @@ require('mason-lspconfig').setup({
 	ensure_installed = { "jdtls", "lua_ls", "ts_ls", "ts_ls" }
 })
 require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
+require('colorizer').setup()
 require('theme')
