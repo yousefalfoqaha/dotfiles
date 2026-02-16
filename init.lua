@@ -12,16 +12,10 @@ vim.o.undofile = true
 vim.o.swapfile = false
 vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 vim.g.netrw_banner = 0
-
+vim.g.netrw_liststyle = 3
+vim.o.wildignorecase = true
+vim.o.wildmenu = true
 vim.g.mapleader = " "
-
-vim.keymap.set('n', '<leader>ff', function() FzfLua.files() end)
-vim.keymap.set('n', '<leader>fb', function() FzfLua.buffers() end)
-vim.keymap.set('n', '<leader>fw', function() FzfLua.lgrep_curbuf() end)
-vim.keymap.set('n', '<leader>fW', function() FzfLua.live_grep() end)
-vim.keymap.set('n', '<leader>fs', function() FzfLua.lsp_document_symbols() end)
-vim.keymap.set('n', '<leader>fS', function() FzfLua.lsp_live_workspace_symbols() end)
-vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
 
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
 vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition() end)
@@ -74,12 +68,10 @@ vim.pack.add({
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
-	{ src = github("ibhagwan/fzf-lua") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("norcalli/nvim-colorizer.lua") },
 })
 
-require('fzf-lua')
 require('mason').setup()
 require('mason-lspconfig').setup({
 	ensure_installed = { "jdtls", "lua_ls", "ts_ls", "ts_ls" }
@@ -87,3 +79,4 @@ require('mason-lspconfig').setup({
 require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
 require('colorizer').setup()
 require('theme')
+require('find')
