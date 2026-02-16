@@ -1,4 +1,5 @@
 vim.o.termguicolors = true
+vim.o.cursorline = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.scrolloff = 8
@@ -8,6 +9,7 @@ vim.o.relativenumber = true
 vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = 'rounded'
 vim.o.undofile = true
+vim.o.swapfile = false
 vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 
 vim.g.mapleader = " "
@@ -52,6 +54,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+	callback = function()
+		local _ = pcall(vim.treesitter.start)
+	end,
+})
+
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
 	{ src = github("nvim-tree/nvim-web-devicons") },
@@ -61,6 +69,7 @@ vim.pack.add({
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
 	{ src = github("ibhagwan/fzf-lua") },
+	{ src = github("nvim-treesitter/nvim-treesitter") },
 })
 
 require('fzf-lua')
@@ -68,5 +77,6 @@ require('mason').setup()
 require('mason-lspconfig').setup({
 	ensure_installed = { "jdtls", "lua_ls" }
 })
+require('nvim-treesitter').install({ 'java' })
 
-vim.cmd("colorscheme nord")
+vim.cmd("colorscheme monokai-pro")
