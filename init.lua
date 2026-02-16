@@ -11,6 +11,7 @@ vim.o.winborder = 'rounded'
 vim.o.undofile = true
 vim.o.swapfile = false
 vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
+vim.g.netrw_banner = 0
 
 vim.g.mapleader = " "
 
@@ -24,6 +25,14 @@ vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
 
 vim.keymap.set('n', '<leader>lf', function() vim.lsp.buf.format() end)
 
+vim.keymap.set('n', '<leader>c', function()
+	vim.ui.input({ prompt = "Colorscheme: " }, function(name)
+		if name then
+			pcall(vim.cmd.colorscheme, name)
+		end
+	end)
+end)
+
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -35,6 +44,9 @@ end, { desc = "Delete other buffers" })
 
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
+
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
+vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
 
 vim.api.nvim_create_autocmd('BufWritePre', {
 	group = vim.api.nvim_create_augroup('format_on_save', { clear = true }),
@@ -65,18 +77,19 @@ vim.pack.add({
 	{ src = github("nvim-tree/nvim-web-devicons") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("nordtheme/vim") },
+	{ src = github("kepano/flexoki-neovim") },
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
 	{ src = github("ibhagwan/fzf-lua") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
+	{ src = github("norcalli/nvim-colorizer.lua") },
 })
 
 require('fzf-lua')
 require('mason').setup()
 require('mason-lspconfig').setup({
-	ensure_installed = { "jdtls", "lua_ls" }
+	ensure_installed = { "jdtls", "lua_ls", "ts_ls", "ts_ls" }
 })
-require('nvim-treesitter').install({ 'java' })
-
-vim.cmd("colorscheme monokai-pro")
+require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
+require('theme')
