@@ -24,6 +24,10 @@
       "rev": "5921997472574fca3880b62949eb8679dc6f5afc",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
+    "gitsigns.nvim": {
+      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
     "indent-blankline.nvim": {
       "rev": "005b56001b2cb30bfa61b7986bc50657816ba4ba",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
@@ -43,6 +47,10 @@
     "mini.pick": {
       "rev": "4ad37ade984e69c43227b82ccdca5a92a22886de",
       "src": "https://github.com/echasnovski/mini.pick"
+    },
+    "modicator.nvim": {
+      "rev": "0bc989b32a7ba3cab06cb79a433557384eb2a0be",
+      "src": "https://github.com/mawkler/modicator.nvim"
     },
     "monokai-pro.nvim": {
       "rev": "d8884d4473667c48bd17a68d08383d38839136a3",
@@ -83,6 +91,10 @@
     "oil.nvim": {
       "rev": "f55b25e493a7df76371cfadd0ded5004cb9cd48a",
       "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "slimline.nvim": {
+      "rev": "6b1f20780a26813ba3c2f248c6c6f61e7281bb7b",
+      "src": "https://github.com/sschleemilch/slimline.nvim"
     },
     "vim": {
       "rev": "f13f5dfbb784deddbc1d8195f34dfd9ec73e2295",

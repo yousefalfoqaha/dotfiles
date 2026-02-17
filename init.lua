@@ -13,10 +13,11 @@ vim.o.wildignorecase = true
 vim.o.wildmenu = true
 vim.o.ignorecase = true
 vim.o.grepprg = "rg --vimgrep"
-
+vim.o.smartindent = true
+vim.o.signcolumn = "yes"
+vim.opt.statuscolumn = "%s%3l   "
+vim.o.cursorline = true
 vim.g.mapleader = " "
-
-vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition() end)
 
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
@@ -36,8 +37,9 @@ vim.keymap.set('n', '<leader>fW', function() FzfLua.live_grep() end)
 vim.keymap.set('n', '<leader>fs', function() FzfLua.lsp_document_symbols() end)
 vim.keymap.set('n', '<leader>fS', function() FzfLua.lsp_live_workspace_symbols() end)
 vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
+vim.keymap.set('n', '<leader>fc', function() FzfLua.files({ cwd = vim.fn.expand("~/.config/nvim") }) end)
 
-vim.keymap.set('n', '<leader>e', function() vim.cmd("Oil") end)
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set('n', '<leader>w', function() vim.cmd("w") end)
 vim.keymap.set('n', '<leader>q', function() vim.cmd("q") end)
 
@@ -75,13 +77,19 @@ vim.pack.add({
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
 	{ src = github("ibhagwan/fzf-lua") },
+	{ src = github("mawkler/modicator.nvim") },
+	{ src = github("lewis6991/gitsigns.nvim") }
 })
 
+require('gitsigns').setup()
+require('modicator').setup()
 require('fzf-lua')
 require('oil').setup()
 require('conform').setup({
 	formatters_by_ft = {
-		java = { 'google-java-format' }
+		java = { 'google-java-format' },
+		lua = { 'stylelua' },
+		javascript = { "prettierd", "prettier", stop_after_first = true },
 	},
 	format_on_save = {
 		timeout_ms = 500,
