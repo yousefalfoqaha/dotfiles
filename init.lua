@@ -1,6 +1,4 @@
 vim.o.termguicolors = true
-vim.o.cursorline = true
-vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.scrolloff = 8
 vim.o.wrap = false
@@ -33,12 +31,13 @@ end, { desc = "Delete other buffers" })
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
+vim.keymap.set('n', '<leader>g', ':copen | :silent :gr! ')
+
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
 
 vim.api.nvim_create_autocmd('BufWritePre', {
 	group = vim.api.nvim_create_augroup('format_on_save', { clear = true }),
-	pattern = '*',
 	desc = 'Format on save',
 	callback = function()
 		local _, _ = pcall(vim.lsp.buf.format, { async = false })
@@ -47,7 +46,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.api.nvim_create_autocmd('TextYankPost', {
 	group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
-	pattern = '*',
 	desc = 'Highlight selection on yank',
 	callback = function()
 		vim.highlight.on_yank({ timeout = 100, visual = true })
@@ -62,7 +60,6 @@ vim.api.nvim_create_autocmd('FileType', {
 
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
-	{ src = github("nvim-tree/nvim-web-devicons") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("nordtheme/vim") },
 	{ src = github("kepano/flexoki-neovim") },
