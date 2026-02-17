@@ -18,8 +18,6 @@ vim.g.mapleader = " "
 
 vim.keymap.set('n', '<leader>ld', function() vim.lsp.buf.definition() end)
 
-vim.keymap.set('n', '<leader>g', ':copen | :silent :gr! ')
-
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -97,4 +95,3 @@ require('mason-lspconfig').setup({
 require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
 require('colorizer').setup()
 require('theme')
-require('find')
