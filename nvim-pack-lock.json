@@ -4,6 +4,18 @@
       "rev": "d1e7c7c45d45c6b6a25427bf62db4db73b03ff3d",
       "src": "https://github.com/saghen/blink.nvim"
     },
+    "breadcrumbs.nvim": {
+      "rev": "a59e3ee12818135098e5ce8efeb7b58b675b09ec",
+      "src": "https://github.com/LunarVim/breadcrumbs.nvim"
+    },
+    "conform.nvim": {
+      "rev": "c2526f1cde528a66e086ab1668e996d162c75f4f",
+      "src": "https://github.com/stevearc/conform.nvim"
+    },
+    "fidget.nvim": {
+      "rev": "7fa433a83118a70fe24c1ce88d5f0bd3453c0970",
+      "src": "https://github.com/j-hui/fidget.nvim"
+    },
     "flexoki-neovim": {
       "rev": "c3e2251e813d29d885a7cbbe9808a7af234d845d",
       "src": "https://github.com/kepano/flexoki-neovim"
@@ -55,6 +67,10 @@
     "nvim-lspconfig": {
       "rev": "44acfe887d4056f704ccc4f17513ed41c9e2b2e6",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-navic": {
+      "rev": "f5eba192f39b453675d115351808bd51276d9de5",
+      "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-treesitter": {
       "rev": "4d9466677a5ceadef104eaa0fe08d60d91c4e9a7",
