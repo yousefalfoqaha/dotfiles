@@ -65,6 +65,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
+	{ src = github("neanias/everforest-nvim") },
 	{ src = github("stevearc/oil.nvim") },
 	{ src = github("nvim-tree/nvim-web-devicons") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
