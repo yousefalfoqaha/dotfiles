@@ -18,7 +18,10 @@ vim.o.signcolumn = "yes"
 vim.opt.statuscolumn = "%s%3l   "
 vim.o.cursorline = true
 vim.g.mapleader = " "
+vim.o.wildmode = "noselect:lastused:full"
+vim.g.netrw_banner = 0
 
+vim.keymap.set('n', '<leader>bb', ':b ')
 vim.keymap.set('n', '<leader>bo', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -26,20 +29,15 @@ vim.keymap.set('n', '<leader>bo', function()
 			vim.api.nvim_buf_delete(buf, { force = true })
 		end
 	end
-end, { desc = "Delete other buffers" })
+end)
 
 vim.keymap.set('n', '<leader>bd', function() vim.cmd("bd") end)
 
-vim.keymap.set('n', '<leader>ff', function() FzfLua.files() end)
-vim.keymap.set('n', '<leader>fb', function() FzfLua.buffers() end)
-vim.keymap.set('n', '<leader>fw', function() FzfLua.lgrep_curbuf() end)
-vim.keymap.set('n', '<leader>fW', function() FzfLua.live_grep() end)
-vim.keymap.set('n', '<leader>fs', function() FzfLua.lsp_document_symbols() end)
-vim.keymap.set('n', '<leader>fS', function() FzfLua.lsp_live_workspace_symbols() end)
-vim.keymap.set('n', '<leader>fr', function() FzfLua.lsp_references() end)
-vim.keymap.set('n', '<leader>fc', function() FzfLua.files({ cwd = vim.fn.expand("~/.config/nvim") }) end)
+vim.keymap.set('n', '<leader>e', function() vim.cmd("Ex") end)
 
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set('n', '<leader>g', ':copen | :silent :gr! ')
+vim.keymap.set('n', '<leader>f', ':fin ')
+
 vim.keymap.set('n', '<leader>w', function() vim.cmd("w") end)
 vim.keymap.set('n', '<leader>q', function() vim.cmd("q") end)
 
@@ -66,8 +64,6 @@ vim.api.nvim_create_autocmd('FileType', {
 local github = function(x) return 'https://github.com/' .. x end
 vim.pack.add({
 	{ src = github("neanias/everforest-nvim") },
-	{ src = github("stevearc/oil.nvim") },
-	{ src = github("nvim-tree/nvim-web-devicons") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("nordtheme/vim") },
@@ -77,20 +73,17 @@ vim.pack.add({
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
-	{ src = github("ibhagwan/fzf-lua") },
 	{ src = github("mawkler/modicator.nvim") },
 	{ src = github("lewis6991/gitsigns.nvim") }
 })
 
 require('gitsigns').setup()
 require('modicator').setup()
-require('fzf-lua')
-require('oil').setup()
 require('conform').setup({
 	formatters_by_ft = {
 		java = { 'google-java-format' },
 		lua = { 'stylelua' },
-		javascript = { "prettierd", "prettier", stop_after_first = true },
+		javascript = { "prettier" },
 	},
 	format_on_save = {
 		timeout_ms = 500,
@@ -104,3 +97,4 @@ require('mason-lspconfig').setup({
 require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
 require('colorizer').setup()
 require('theme')
+require('find')
