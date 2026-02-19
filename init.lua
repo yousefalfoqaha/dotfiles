@@ -66,19 +66,18 @@ vim.pack.add({
 	{ src = github("neanias/everforest-nvim") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("stevearc/conform.nvim") },
-	{ src = github("nordtheme/vim") },
+	{ src = github("EdenEast/nightfox.nvim") },
 	{ src = github("kepano/flexoki-neovim") },
 	{ src = github("norcalli/nvim-colorizer.lua") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("mason-org/mason.nvim") },
 	{ src = github("mason-org/mason-lspconfig.nvim") },
-	{ src = github("mawkler/modicator.nvim") },
-	{ src = github("lewis6991/gitsigns.nvim") }
+	{ src = github("lewis6991/gitsigns.nvim") },
+	{ src = github("luisiacc/gruvbox-baby") }
 })
 
 require('gitsigns').setup()
-require('modicator').setup()
 require('conform').setup({
 	formatters_by_ft = {
 		java = { 'google-java-format' },
