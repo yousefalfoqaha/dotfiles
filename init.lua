@@ -30,8 +30,8 @@ vim.keymap.set('n', '<leader>bo', function()
 		end
 	end
 end)
-
 vim.keymap.set('n', '<leader>bd', function() vim.cmd("bd") end)
+vim.keymap.set('n', '<leader>ls', function() vim.cmd("ls") end)
 
 vim.keymap.set('n', '<leader>e', function() vim.cmd("Ex") end)
 
@@ -46,6 +46,8 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y<CR>')
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>d', '"+d<CR>')
+
+
 
 vim.api.nvim_create_autocmd('TextYankPost', {
 	group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
@@ -105,7 +107,7 @@ require('conform').setup({
 		lsp_format = "fallback",
 	},
 })
-require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css' })
+require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css', 'python' })
 require('colorizer').setup()
 require('theme')
 require('find')
