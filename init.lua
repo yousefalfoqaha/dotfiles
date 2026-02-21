@@ -21,8 +21,8 @@ vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
 
-vim.keymap.set('n', '<leader>bb', ':b ')
-vim.keymap.set('n', '<leader>bo', function()
+vim.keymap.set('n', '<leader>b', ':b ')
+vim.keymap.set('n', '<leader>o', function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 		if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
@@ -30,8 +30,9 @@ vim.keymap.set('n', '<leader>bo', function()
 		end
 	end
 end)
-vim.keymap.set('n', '<leader>bd', function() vim.cmd("bd") end)
-vim.keymap.set('n', '<leader>ls', function() vim.cmd("ls") end)
+vim.keymap.set('n', '<leader>c', function() vim.cmd("bd") end)
+vim.keymap.set('n', '<leader>l', function() vim.cmd("ls") end)
+vim.keymap.set('n', '<leader>t', ':Theme ')
 
 vim.keymap.set('n', '<leader>e', function() vim.cmd("Ex") end)
 
@@ -71,6 +72,7 @@ vim.pack.add({
 	{ src = github("luisiacc/gruvbox-baby") },
 	{ src = github("EdenEast/nightfox.nvim") },
 	{ src = github("kepano/flexoki-neovim") },
+	{ src = github("bjarneo/ethereal.nvim") },
 
 	-- highlighting
 	{ src = github("norcalli/nvim-colorizer.lua") },
@@ -83,7 +85,7 @@ vim.pack.add({
 	{ src = github("stevearc/conform.nvim") },
 })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "rust_analyzer" })
 
 vim.env.JDTLS_JVM_ARGS = '-javaagent:' .. vim.fn.expand("~/.local/share/java/lombok.jar")
 
@@ -101,13 +103,23 @@ require('conform').setup({
 		java = { 'google-java-format' },
 		lua = { 'stylelua' },
 		javascript = { "prettier" },
+		typescript = { "prettier" },
+		javascriptreact = { "prettier" },
+		typescriptreact = { "prettier" },
 	},
 	format_on_save = {
 		timeout_ms = 500,
 		lsp_format = "fallback",
 	},
 })
-require('nvim-treesitter').install({ 'java', 'typescript', 'html', 'css', 'python' })
+require('nvim-treesitter').install({
+	'java',
+	'typescript',
+	'html',
+	'css',
+	'python',
+	'rust'
+})
 require('colorizer').setup()
 require('theme')
 require('find')
