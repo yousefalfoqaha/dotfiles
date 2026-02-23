@@ -88,12 +88,12 @@ vim.pack.add({
 	{ src = github("catgoose/nvim-colorizer.lua") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("lewis6991/gitsigns.nvim") },
+	{ src = github("MeanderingProgrammer/render-markdown.nvim") },
 
 	-- languages
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("mfussenegger/nvim-jdtls") },
-	{ src = github("iamcco/markdown-preview.nvim") },
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman" })
@@ -108,6 +108,7 @@ vim.lsp.config("jdtls", {
 	},
 })
 
+require("render-markdown").setup({})
 require("gitsigns").setup()
 require("conform").setup({
 	formatters_by_ft = {
