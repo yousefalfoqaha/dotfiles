@@ -96,7 +96,7 @@ vim.pack.add({
 	{ src = github("mfussenegger/nvim-jdtls") },
 })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman", "clangd" })
 
 vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/java/lombok.jar")
 
@@ -119,6 +119,8 @@ require("conform").setup({
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
 		markdown = { "prettier" },
+		html = { "prettier" },
+		css = { "prettier" },
 	},
 	format_on_save = {
 		timeout_ms = 500,
