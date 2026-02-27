@@ -1,64 +1,23 @@
 #!/usr/bin/env bash
 set -e
 
-# -------------------------
-# Update & install base packages
-# -------------------------
-echo "[INFO] Updating package lists..."
-sudo apt-get update -y
+sudo apt-get update
+sudo apt-get install -y git curl wget unzip build-essential bash-completion python3 python3-venv python3-pip neovim openjdk-17-jdk clangd npm
 
-echo "[INFO] Installing essential packages..."
-sudo apt-get install -y \
-    git \
-    curl \
-    wget \
-    unzip \
-    build-essential \
-    software-properties-common \
-    locales \
-    bash-completion \
-    python3 \
-    python3-venv \
-    python3-pip \
-    neovim
-
-# -------------------------
-# Install exa (modern ls replacement)
-# -------------------------
-echo "[INFO] Installing exa..."
-sudo apt-get install -y exa || {
-    # fallback: latest GitHub release
-    EXA_VERSION="0.10.1"
-    wget "https://github.com/ogham/exa/releases/download/v${EXA_VERSION}/exa-linux-x86_64-v${EXA_VERSION}.zip" -O /tmp/exa.zip
-    unzip /tmp/exa.zip -d /tmp/exa
-    sudo mv /tmp/exa/bin/exa /usr/local/bin/exa
-    rm -rf /tmp/exa /tmp/exa.zip
-}
-
-# -------------------------
-# Install starship (prompt)
-# -------------------------
-echo "[INFO] Installing starship..."
+echo "alias ls='exa -al --icons --git'" >> ~/.bashrc
+echo "alias n='nvim'" >> ~/.bashrc
 curl -fsSL https://starship.rs/install.sh | bash -s -- -y
+echo 'eval "$(starship init bash)"' >> ~/.bashrc
+mkdir -p ~/.local/bin
+export PATH="$HOME/.local/bin:$PATH"
 
-# -------------------------
-# Setup Bash: starship & ls alias
-# -------------------------
-BASHRC="$HOME/.bashrc"
+npm install -g typescript-language-server tree-sitter-cli
 
-# starship init
-if ! grep -q "starship init bash" "$BASHRC"; then
-    echo 'eval "$(starship init bash)"' >> "$BASHRC"
-fi
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+export PATH="$HOME/.cargo/bin:$PATH"
+cargo install stylua marksman
 
-# ls alias
-if ! grep -q "alias ls='exa'" "$BASHRC"; then
-    echo "alias ls='exa -al --icons --git'" >> "$BASHRC"
-fi
+mkdir -p ~/.local/share/java
+curl -fsSL https://projectlombok.org/downloads/lombok.jar -o ~/.local/share/java/lombok.jar
 
-# n alias for nvim
-if ! grep -q "alias n='nvim'" "$BASHRC"; then
-    echo "alias n='nvim'" >> "$BASHRC"
-fi
-
-echo "[INFO] Installation complete! Reload your shell or run: source ~/.bashrc"
+echo "Dotfiles setup complete."
