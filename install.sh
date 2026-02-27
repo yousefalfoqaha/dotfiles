@@ -2,7 +2,7 @@
 set -e
 
 sudo apt-get update
-sudo apt-get install -y git curl wget unzip build-essential bash-completion python3 python3-venv python3-pip neovim openjdk-17-jdk clangd npm
+sudo apt-get install -y jdtls
 
 echo "alias ls='exa -al --icons --git'" >> ~/.bashrc
 echo "alias n='nvim'" >> ~/.bashrc
