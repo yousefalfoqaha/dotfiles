@@ -20,6 +20,7 @@ vim.o.cursorline = true
 vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
+vim.o.lazyredraw = false
 
 vim.keymap.set("n", "<leader>b", ":b ")
 vim.keymap.set("n", "<leader>o", function()
