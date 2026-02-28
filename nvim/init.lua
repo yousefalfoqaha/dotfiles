@@ -94,11 +94,12 @@ vim.pack.add({
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("mfussenegger/nvim-jdtls") },
+	{ src = github("mason-org/mason.nvim") },
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman", "clangd" })
 
-vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/java/lombok.jar")
+vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar")
 
 vim.lsp.config("jdtls", {
 	settings = {
