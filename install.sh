@@ -42,5 +42,3 @@ if ! grep -q "dotfiles .bashrc" ~/.bashrc; then
 fi
 
 echo "Installed dotfiles."
-
-exec bash
