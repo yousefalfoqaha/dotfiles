@@ -109,6 +109,7 @@ vim.lsp.config("jdtls", {
 	},
 })
 
+require("mason").setup()
 require("render-markdown").setup({})
 require("gitsigns").setup()
 require("conform").setup({
