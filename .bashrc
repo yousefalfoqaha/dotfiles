@@ -13,3 +13,5 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
 fi
 
 export TERM=xterm-256color
+export COLUMNS=$(tput cols)
+export LINES=$(tput lines)
