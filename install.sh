@@ -7,7 +7,7 @@ echo "Updating package lists..."
 sudo apt-get update -y
 
 echo "Installing system dependencies..."
-sudo apt-get install -y curl wget tar gzip unzip ripgrep fd-find
+sudo apt-get install -y curl wget tar gzip unzip ripgrep fd-find tmux
 
 echo "Installing tree-sitter-cli..."
 curl -fLo tree-sitter.gz https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
@@ -47,3 +47,4 @@ echo "Symlinking configs..."
 mkdir -p ~/.config
 ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
 ln -sf "$DOTFILES_DIR/starship.toml" ~/.config/starship.toml
+ln -sf "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf
