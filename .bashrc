@@ -1,11 +1,8 @@
-# ~/dotfiles/.bashrc
-
 alias n='nvim'
-alias ls='eza -lh --icons'
-alias ll='eza -lha --icons --git'
+alias fd='fdfind'
+alias ls='eza --icons'
+alias ll='eza -lh --icons'
+alias la='eza -lha --icons'
 alias tree='eza --tree --icons'
-
-export EDITOR='nvim'
-export VISUAL='nvim'
 
 eval "$(starship init bash)"
