@@ -42,3 +42,8 @@ if ! grep -q "dotfiles .bashrc" ~/.bashrc; then
 fi
 
 echo "Installed dotfiles."
+
+echo "Symlinking configs..."
+mkdir -p ~/.config
+ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
+ln -sf "$DOTFILES_DIR/starship.toml" ~/.config/starship.toml
