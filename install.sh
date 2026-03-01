@@ -9,6 +9,8 @@ sudo apt-get update -y
 echo "Installing system dependencies..."
 sudo apt-get install -y curl wget tar gzip unzip ripgrep fzf fd-find tmux
 
+sudo ln -sf $(which fdfind) /usr/local/bin/fd
+
 echo "Installing tree-sitter-cli..."
 curl -fLo tree-sitter.gz https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
 gzip -d tree-sitter.gz
