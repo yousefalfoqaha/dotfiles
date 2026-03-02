@@ -101,7 +101,9 @@ vim.pack.add({
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman", "clangd" })
 
-vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar")
+local mason_path = vim.fn.stdpath("data") .. "/mason"
+
+vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. mason_path .. "/packages/jdtls/lombok.jar"
 
 vim.lsp.config("jdtls", {
 	settings = {
