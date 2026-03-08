@@ -10,7 +10,6 @@ end
 vim.api.nvim_create_user_command("Theme", function(opts)
 	local name = opts.args
 	if name == "" then return end
-
 	if pcall(vim.cmd.colorscheme, name) then
 		local wf = io.open(file, "w")
 		if wf then
