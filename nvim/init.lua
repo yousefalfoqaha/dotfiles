@@ -23,11 +23,12 @@ vim.pack.add({
 	{ src = github("mason-org/mason.nvim") },
 })
 
+require("options")
+
 require("render-markdown").setup()
 require("gitsigns").setup()
 require("colorizer").setup()
 
-require("options")
 require("keymaps")
 require("autocmds")
 

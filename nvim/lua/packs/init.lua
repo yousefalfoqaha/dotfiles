@@ -33,6 +33,11 @@ local function write_state()
 	end
 end
 
+local function save_and_restart()
+	write_state()
+	vim.cmd("restart")
+end
+
 local function available_packs()
 	local packs = {}
 	local files = vim.fn.glob(langs_path .. "/*.lua", false, true)
@@ -65,18 +70,6 @@ local function parse_lsp(lsp)
 		end
 	end
 	return servers
-end
-
-local function lsp_server_names(lsp)
-	local names = {}
-	for k, v in pairs(lsp) do
-		if type(k) == "number" and type(v) == "string" then
-			table.insert(names, v)
-		elseif type(k) == "string" then
-			table.insert(names, k)
-		end
-	end
-	return names
 end
 
 local function apply()
@@ -151,36 +144,16 @@ local function apply()
 		},
 	})
 
-	local pkgs = vim.tbl_keys(mason_packages)
-	if #pkgs > 0 then
-		table.sort(pkgs)
-		vim.cmd("MasonInstall " .. table.concat(pkgs, " "))
-	end
-end
-
-local function unapply(names)
-	for _, name in ipairs(names) do
-		local pack = load_pack(name)
-		if pack then
-			if pack.lsp then
-				for _, server in ipairs(lsp_server_names(pack.lsp)) do
-					local clients = vim.lsp.get_clients({ name = server })
-					for _, client in ipairs(clients) do
-						client:stop()
-					end
-				end
-			end
-
-			if pack.teardown then
-				local ok, err = pcall(pack.teardown)
-				if not ok then
-					vim.notify("Pack '" .. name .. "' teardown failed: " .. err, vim.log.levels.ERROR)
-				end
-			end
+	local missing = {}
+	for pkg in pairs(mason_packages) do
+		if vim.fn.isdirectory(mason_path .. "/packages/" .. pkg) == 0 then
+			table.insert(missing, pkg)
 		end
 	end
-
-	apply()
+	if #missing > 0 then
+		table.sort(missing)
+		vim.cmd("MasonInstall " .. table.concat(missing, " "))
+	end
 end
 
 vim.api.nvim_create_user_command("PackEnable", function(opts)
@@ -209,9 +182,7 @@ vim.api.nvim_create_user_command("PackEnable", function(opts)
 	end
 
 	if #added > 0 then
-		write_state()
-		apply()
-		vim.notify("Enabled: " .. table.concat(added, ", "))
+		save_and_restart()
 	end
 end, {
 	nargs = "+",
@@ -245,9 +216,7 @@ vim.api.nvim_create_user_command("PackDisable", function(opts)
 	end
 
 	if #removed > 0 then
-		write_state()
-		unapply(removed)
-		vim.notify("Disabled: " .. table.concat(removed, ", "))
+		save_and_restart()
 	end
 end, {
 	nargs = "+",
@@ -264,16 +233,13 @@ end, {
 })
 
 vim.api.nvim_create_user_command("PackClear", function()
-	local names = vim.tbl_keys(enabled)
-	if #names == 0 then
+	if vim.tbl_isempty(enabled) then
 		vim.notify("No packs enabled", vim.log.levels.WARN)
 		return
 	end
 
 	enabled = {}
-	write_state()
-	unapply(names)
-	vim.notify("All packs disabled")
+	save_and_restart()
 end, {})
 
 vim.api.nvim_create_user_command("PackList", function()
