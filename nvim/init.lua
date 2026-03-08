@@ -4,18 +4,17 @@ vim.o.scrolloff = 8
 vim.o.wrap = false
 vim.o.number = true
 vim.o.relativenumber = true
-vim.diagnostic.config({ virtual_text = true })
 vim.o.winborder = "rounded"
 vim.o.undofile = true
-vim.o.swapfile = false
 vim.o.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.o.swapfile = false
 vim.o.wildignorecase = true
 vim.o.wildmenu = true
 vim.o.ignorecase = true
 vim.o.grepprg = "rg --vimgrep"
 vim.o.smartindent = true
 vim.o.signcolumn = "yes"
-vim.opt.statuscolumn = "%s%3l   "
+vim.o.statuscolumn = "%s%3l   "
 vim.o.cursorline = true
 vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
@@ -38,7 +37,6 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
-	desc = "Highlight selection on yank",
 	callback = function()
 		vim.highlight.on_yank({ timeout = 100, visual = true })
 	end,
@@ -50,9 +48,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-vim.cmd([[set completeopt+=menuone,noselect,popup]])
-
 vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 		local bufnr = args.buf
