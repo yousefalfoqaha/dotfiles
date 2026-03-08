@@ -31,15 +31,10 @@ vim.keymap.set("n", "<leader>o", function()
 	end
 end)
 
-vim.keymap.set("n", "<leader>t", ":Theme ")
-
 vim.keymap.set("n", "<leader>g", ":copen | :silent :gr! ")
 
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
-
-vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y<CR>')
-vim.keymap.set({ "n", "v", "x" }, "<leader>d", '"+d<CR>')
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
