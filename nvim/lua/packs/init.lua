@@ -242,6 +242,12 @@ vim.api.nvim_create_user_command("PackClear", function()
 	save_and_restart()
 end, {})
 
+-- Command: PackRestart
+vim.api.nvim_create_user_command("PackRestart", function()
+	vim.cmd("restart")
+end, {})
+
+-- Command: PackList
 vim.api.nvim_create_user_command("PackList", function()
 	local all = available_packs()
 	local lines = {}

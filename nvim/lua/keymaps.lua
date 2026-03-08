@@ -11,6 +11,7 @@ vim.keymap.set("n", "<leader>g", ":copen | :silent :gr! ")
 
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
+
 vim.keymap.set("n", "<leader>pe", ":PackEnable ")
 vim.keymap.set("n", "<leader>pd", ":PackDisable ")
 vim.keymap.set("n", "<leader>pl", function()
