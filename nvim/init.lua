@@ -20,10 +20,8 @@ vim.o.cursorline = true
 vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 1
-vim.o.lazyredraw = false
+vim.o.completeopt = "menuone,noselect,popup"
 
-vim.keymap.set("n", "<leader>b", ":b ")
 vim.keymap.set("n", "<leader>o", function()
 	local current = vim.api.nvim_get_current_buf()
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -32,27 +30,10 @@ vim.keymap.set("n", "<leader>o", function()
 		end
 	end
 end)
-vim.keymap.set("n", "<leader>c", function()
-	vim.cmd("bd")
-end)
-vim.keymap.set("n", "<leader>l", function()
-	vim.cmd("ls")
-end)
+
 vim.keymap.set("n", "<leader>t", ":Theme ")
 
-vim.keymap.set("n", "<leader>e", function()
-	vim.cmd("Ex")
-end)
-
 vim.keymap.set("n", "<leader>g", ":copen | :silent :gr! ")
-vim.keymap.set("n", "<leader>f", ":fin ")
-
-vim.keymap.set("n", "<leader>w", function()
-	vim.cmd("w")
-end)
-vim.keymap.set("n", "<leader>q", function()
-	vim.cmd("q")
-end)
 
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -71,6 +52,30 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		local _ = pcall(vim.treesitter.start)
+	end,
+})
+
+vim.cmd([[set completeopt+=menuone,noselect,popup]])
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		local bufnr = args.buf
+
+		if not client then
+			return
+		end
+
+		vim.lsp.completion.enable(true, client.id, bufnr, {
+			-- autotrigger = true,
+			convert = function(item)
+				return { abbr = item.label:gsub("%b()", "") }
+			end,
+		})
+		-- vim.api.nvim_create_autocmd("InsertCharPre", {
+		-- 	buffer = bufnr,
+		-- 	callback = vim.lsp.completion.get,
+		-- })
 	end,
 })
 
@@ -99,7 +104,7 @@ vim.pack.add({
 	{ src = github("mason-org/mason.nvim") },
 })
 
-vim.lsp.enable({ "lua_ls", "ts_ls", "jdtls", "marksman", "clangd" })
+vim.lsp.enable({ "lua_ls", "vtsls", "jdtls", "marksman", "clangd" })
 
 local mason_path = vim.fn.stdpath("data") .. "/mason"
 
@@ -124,9 +129,10 @@ require("conform").setup({
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
-		markdown = { "prettier" },
+		markdown = { "prettier", "marksman" },
 		html = { "prettier" },
 		css = { "prettier" },
+		json = { "prettier" },
 	},
 	format_on_save = {
 		timeout_ms = 500,
@@ -140,6 +146,9 @@ require("nvim-treesitter").install({
 	"css",
 	"python",
 	"markdown",
+	"json",
+	"yaml",
+	"toml",
 })
 require("colorizer").setup()
 require("theme")
