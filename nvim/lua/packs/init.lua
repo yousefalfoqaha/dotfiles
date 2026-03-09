@@ -33,11 +33,6 @@ local function write_state()
 	end
 end
 
-local function save_and_restart()
-	write_state()
-	vim.cmd("restart")
-end
-
 local function available_packs()
 	local packs = {}
 	local files = vim.fn.glob(langs_path .. "/*.lua", false, true)
@@ -182,7 +177,7 @@ vim.api.nvim_create_user_command("PackEnable", function(opts)
 	end
 
 	if #added > 0 then
-		save_and_restart()
+		write_state()
 	end
 end, {
 	nargs = "+",
@@ -216,7 +211,7 @@ vim.api.nvim_create_user_command("PackDisable", function(opts)
 	end
 
 	if #removed > 0 then
-		save_and_restart()
+		write_state()
 	end
 end, {
 	nargs = "+",
@@ -239,15 +234,9 @@ vim.api.nvim_create_user_command("PackClear", function()
 	end
 
 	enabled = {}
-	save_and_restart()
+	write_state()
 end, {})
 
--- Command: PackRestart
-vim.api.nvim_create_user_command("PackRestart", function()
-	vim.cmd("restart")
-end, {})
-
--- Command: PackList
 vim.api.nvim_create_user_command("PackList", function()
 	local all = available_packs()
 	local lines = {}

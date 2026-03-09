@@ -14,7 +14,6 @@ vim.pack.add({
 	{ src = github("catgoose/nvim-colorizer.lua") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("lewis6991/gitsigns.nvim") },
-	{ src = github("MeanderingProgrammer/render-markdown.nvim") },
 
 	-- languages
 	{ src = github("neovim/nvim-lspconfig") },
@@ -25,7 +24,6 @@ vim.pack.add({
 
 require("options")
 
-require("render-markdown").setup()
 require("gitsigns").setup()
 require("colorizer").setup()
 
