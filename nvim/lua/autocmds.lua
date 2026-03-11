@@ -20,14 +20,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			return
 		end
 		vim.lsp.completion.enable(true, client.id, bufnr, {
-			-- autotrigger = true,
 			convert = function(item)
 				return { abbr = item.label:gsub("%b()", "") }
 			end,
 		})
-		-- vim.api.nvim_create_autocmd("InsertCharPre", {
-		-- 	buffer = bufnr,
-		-- 	callback = vim.lsp.completion.get,
-		-- })
 	end,
 })

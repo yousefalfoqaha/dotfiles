@@ -19,4 +19,4 @@ vim.o.cursorline = true
 vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
-vim.o.completeopt = "menuone,noselect,popup"
+vim.o.completefunc = "menuone,noselect,popup"
