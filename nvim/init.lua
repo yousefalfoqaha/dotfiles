@@ -10,16 +10,16 @@ vim.pack.add({
 	{ src = github("kepano/flexoki-neovim") },
 	{ src = github("bjarneo/ethereal.nvim") },
 
-	-- highlighting
-	{ src = github("catgoose/nvim-colorizer.lua") },
-	{ src = github("nvim-treesitter/nvim-treesitter") },
-	{ src = github("lewis6991/gitsigns.nvim") },
-
 	-- languages
+	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("mfussenegger/nvim-jdtls") },
 	{ src = github("mason-org/mason.nvim") },
+
+	-- misc
+	{ src = github("catgoose/nvim-colorizer.lua") },
+	{ src = github("lewis6991/gitsigns.nvim") },
 })
 
 require("options")
