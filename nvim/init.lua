@@ -19,12 +19,11 @@ vim.pack.add({
 
 	-- misc
 	{ src = github("catgoose/nvim-colorizer.lua") },
-	{ src = github("lewis6991/gitsigns.nvim") },
+	{ src = github("tpope/vim-fugitive") },
 })
 
 require("options")
 
-require("gitsigns").setup()
 require("colorizer").setup()
 
 require("keymaps")
