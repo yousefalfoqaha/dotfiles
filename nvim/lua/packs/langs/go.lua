@@ -1,8 +1,8 @@
 return {
-	mason = { "gopls", "gofumpt" },
-	treesitter = { "go" },
-	lsp = { "gopls" },
-	formatters = {
+	mason_install = { "gopls", "gofumpt" },
+	treesitter_parsers = { "go" },
+	lsp_config = { "gopls" },
+	formatters_by_ft = {
 		go = { "gofumpt" },
 	},
 }

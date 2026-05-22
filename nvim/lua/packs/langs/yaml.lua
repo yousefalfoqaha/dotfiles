@@ -1,3 +1,3 @@
 return {
-	treesitter = { "yaml" },
+	treesitter_parsers = { "yaml" },
 }

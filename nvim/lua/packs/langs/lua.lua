@@ -1,6 +1,6 @@
 return {
-	treesitter = { "lua" },
-	lsp = {
+	treesitter_parsers = { "lua" },
+	lsp_config = {
 		lua_ls = {
 			settings = {
 				Lua = {
@@ -11,8 +11,8 @@ return {
 			},
 		},
 	},
-	formatters = {
+	formatters_by_ft = {
 		lua = { "stylua" },
 	},
-	mason = { "lua-language-server", "stylua" },
+	mason_install = { "lua-language-server", "stylua" },
 }

@@ -1,8 +1,8 @@
 return {
-	treesitter = { "markdown" },
-	lsp = { "marksman" },
-	formatters = {
+	treesitter_parsers = { "markdown" },
+	lsp_config = { "marksman" },
+	formatters_by_ft = {
 		markdown = { "prettier" },
 	},
-	mason = { "marksman", "prettier" },
+	mason_install = { "marksman", "prettier" },
 }

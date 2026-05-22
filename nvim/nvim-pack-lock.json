@@ -128,6 +128,14 @@
       "rev": "6b1f20780a26813ba3c2f248c6c6f61e7281bb7b",
       "src": "https://github.com/sschleemilch/slimline.nvim"
     },
+    "tokyonight.nvim": {
+      "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
+      "src": "https://github.com/folke/tokyonight.nvim"
+    },
+    "vantablack.nvim": {
+      "rev": "8a05ea96343914f1001e937b4fa7d9d44b51d221",
+      "src": "https://github.com/bjarneo/vantablack.nvim"
+    },
     "vim": {
       "rev": "f13f5dfbb784deddbc1d8195f34dfd9ec73e2295",
       "src": "https://github.com/nordtheme/vim"
@@ -135,6 +143,10 @@
     "vim-fugitive": {
       "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
       "src": "https://github.com/tpope/vim-fugitive"
+    },
+    "vimtex": {
+      "rev": "97e11bd4f56d46a87f8593d6ccb27820e19c4ab0",
+      "src": "https://github.com/lervag/vimtex"
     }
   }
 }

@@ -1,7 +1,7 @@
 return {
-	mason = { "jdtls", "google-java-format" },
-	treesitter = { "java" },
-	lsp = {
+	mason_install = { "jdtls", "google-java-format" },
+	treesitter_parsers = { "java" },
+	lsp_config = {
 		jdtls = {
 			settings = {
 				java = {
@@ -10,7 +10,7 @@ return {
 			},
 		},
 	},
-	formatters = {
+	formatters_by_ft = {
 		java = { "google-java-format" },
 	},
 	setup = function(mason_path)

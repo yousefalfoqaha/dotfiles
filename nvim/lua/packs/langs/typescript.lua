@@ -1,6 +1,6 @@
 return {
-	treesitter = { "typescript", "javascript", "tsx" },
-	lsp = {
+	treesitter_parsers = { "typescript", "javascript", "tsx" },
+	lsp_config = {
 		vtsls = {
 			settings = {
 				typescript = {
@@ -16,11 +16,11 @@ return {
 			},
 		},
 	},
-	formatters = {
+	formatters_by_ft = {
 		javascript = { "prettier" },
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
 	},
-	mason = { "vtsls", "prettier" },
+	mason_install = { "vtsls", "prettier" },
 }

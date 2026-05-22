@@ -1,7 +1,7 @@
 return {
-	mason = { "prettier" },
-	treesitter = { "json" },
-	formatters = {
+	mason_install = { "prettier" },
+	treesitter_parsers = { "json" },
+	formatters_by_ft = {
 		json = { "prettier" },
 	},
 }

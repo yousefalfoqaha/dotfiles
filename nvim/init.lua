@@ -9,6 +9,10 @@ vim.pack.add({
 	{ src = github("EdenEast/nightfox.nvim") },
 	{ src = github("kepano/flexoki-neovim") },
 	{ src = github("bjarneo/ethereal.nvim") },
+	{ src = github("rose-pine/neovim") },
+	{ src = github("folke/tokyonight.nvim") },
+	{ src = github("lervag/vimtex") },
+	{ src = github("bjarneo/vantablack.nvim") },
 
 	-- languages
 	{ src = github("nvim-treesitter/nvim-treesitter") },
