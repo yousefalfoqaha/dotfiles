@@ -10,7 +10,7 @@ return {
 		"yaml-language-server",
 	},
 
-	lsp_config = {
+	lsp_configs = {
 		"dockerls",
 		"docker_compose_language_service",
 		"yamlls",

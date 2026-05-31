@@ -1,6 +1,6 @@
 return {
 	treesitter_parsers = { "lua" },
-	lsp_config = {
+	lsp_configs = {
 		lua_ls = {
 			settings = {
 				Lua = {

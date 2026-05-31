@@ -1,6 +1,6 @@
 return {
 	treesitter_parsers = { "markdown" },
-	lsp_config = { "marksman" },
+	lsp_configs = { "marksman" },
 	formatters_by_ft = {
 		markdown = { "prettier" },
 	},

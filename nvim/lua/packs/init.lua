@@ -22,8 +22,8 @@ for _, file in ipairs(files) do
 			end
 		end
 
-		if pack.lsp_config then
-			for k, v in pairs(pack.lsp_config) do
+		if pack.lsp_configs then
+			for k, v in pairs(pack.lsp_configs) do
 				if type(k) == "number" and type(v) == "string" then
 					lsp_servers[v] = {}
 				elseif type(k) == "string" and type(v) == "table" then

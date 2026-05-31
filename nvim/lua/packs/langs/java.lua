@@ -1,7 +1,7 @@
 return {
 	mason_install = { "jdtls", "google-java-format" },
 	treesitter_parsers = { "java" },
-	lsp_config = {
+	lsp_configs = {
 		jdtls = {
 			settings = {
 				java = {

@@ -1,6 +1,6 @@
 return {
 	treesitter_parsers = { "typescript", "javascript", "tsx" },
-	lsp_config = {
+	lsp_configs = {
 		vtsls = {
 			settings = {
 				typescript = {
