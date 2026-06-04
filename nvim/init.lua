@@ -20,15 +20,9 @@ vim.pack.add({
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("mfussenegger/nvim-jdtls") },
 	{ src = github("mason-org/mason.nvim") },
-
-	-- misc
-	{ src = github("catgoose/nvim-colorizer.lua") },
-	{ src = github("tpope/vim-fugitive") },
 })
 
 require("options")
-
-require("colorizer").setup()
 
 require("keymaps")
 require("autocmds")
