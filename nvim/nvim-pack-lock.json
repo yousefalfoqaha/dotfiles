@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "black-metal-theme-neovim": {
+      "rev": "d7ce1c4b9196b3b34e70ca4fa9af108bb4207818",
+      "src": "https://github.com/metalelf0/black-metal-theme-neovim"
+    },
     "blink.nvim": {
       "rev": "d1e7c7c45d45c6b6a25427bf62db4db73b03ff3d",
       "src": "https://github.com/saghen/blink.nvim"

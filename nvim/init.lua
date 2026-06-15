@@ -20,6 +20,7 @@ vim.pack.add({
 	{ src = github("stevearc/conform.nvim") },
 	{ src = github("mfussenegger/nvim-jdtls") },
 	{ src = github("mason-org/mason.nvim") },
+	{ src = github("metalelf0/black-metal-theme-neovim") },
 })
 
 require("options")
