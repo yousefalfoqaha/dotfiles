@@ -13,6 +13,7 @@ vim.pack.add({
 	{ src = github("folke/tokyonight.nvim") },
 	{ src = github("lervag/vimtex") },
 	{ src = github("bjarneo/vantablack.nvim") },
+	{ src = github("llisonleao/gruvbox.nvim") },
 
 	-- languages
 	{ src = github("nvim-treesitter/nvim-treesitter") },
