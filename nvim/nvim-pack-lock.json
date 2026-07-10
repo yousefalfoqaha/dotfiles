@@ -40,6 +40,10 @@
       "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "gruvbox": {
+      "rev": "5d15b2765f59754d7ac263c88a0f6e3e58124951",
+      "src": "https://github.com/morhetz/gruvbox"
+    },
     "gruvbox-baby": {
       "rev": "bd52e62d8134647090108189e69c8b3cd18bdbbf",
       "src": "https://github.com/luisiacc/gruvbox-baby"
