@@ -22,6 +22,9 @@ vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
 vim.o.completefunc = "menuone,noselect,popup"
-vim.g.vimtex_view_method = "general"
-vim.g.vimtex_view_general_viewer = "evince"
 vim.opt.guicursor = "n-v-c-i:block"
+
+vim.g.vimtex_view_general_viewer = "evince"
+vim.g.vimtex_quickfix_mode = 0
+
+vim.g.nord_bold = false

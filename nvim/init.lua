@@ -10,6 +10,7 @@ vim.pack.add({
 	{ src = github("kepano/flexoki-neovim") },
 	{ src = github("bjarneo/ethereal.nvim") },
 	{ src = github("rose-pine/neovim") },
+	{ src = github("shaunsingh/nord.nvim") },
 	{ src = github("folke/tokyonight.nvim") },
 	{ src = github("lervag/vimtex") },
 	{ src = github("bjarneo/vantablack.nvim") },
