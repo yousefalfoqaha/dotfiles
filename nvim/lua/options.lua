@@ -16,8 +16,8 @@ vim.o.wildmenu = true
 vim.o.ignorecase = true
 vim.o.grepprg = "rg --vimgrep"
 vim.o.smartindent = true
-vim.o.signcolumn = "yes"
-vim.o.cursorline = false
+vim.o.signcolumn = "no"
+vim.o.cursorline = true
 vim.g.mapleader = " "
 vim.o.wildmode = "noselect:lastused:full"
 vim.g.netrw_banner = 0
@@ -28,7 +28,3 @@ vim.g.vimtex_view_general_viewer = "evince"
 vim.g.vimtex_quickfix_mode = 0
 
 vim.g.nord_bold = false
-
--- vim.opt.termguicolors = true
--- vim.opt.winblend = 0
--- vim.opt.pumblend = 0
