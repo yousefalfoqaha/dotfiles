@@ -8,6 +8,9 @@ if [ -n "$BACKGROUND" ]; then
 
     if [ -f "$TARGET" ]; then
         ln -sf "$TARGET" "$SYMLINK"
-        swaymsg output "*" bg "$TARGET" fill
+
+        if [ -n "$SWAYSOCK" ]; then
+            swaymsg output "*" bg "$TARGET" fill
+        fi
     fi
 fi

@@ -40,4 +40,6 @@ EOF
 mkdir -p "$HOME/.config/mako"
 ln -sf "$CURRENT/mako" "$HOME/.config/mako/config"
 
-makoctl reload
+if [ -n "$SWAYSOCK" ]; then
+    makoctl reload
+fi

@@ -49,17 +49,4 @@ done
 echo "installing language runtimes via mise..."
 mise install
 
-echo "initializing gruvbox theme..."
-THEMES="$HOME/.config/themes"
-CURRENT="$THEMES/current"
-mkdir -p "$CURRENT"
-
-ln -sfn "$THEMES/gruvbox.sh" "$CURRENT/base16.sh"
-
-for hook in "$THEMES/hooks/"*; do
-    if [[ -x "$hook" ]]; then
-        "$hook"
-    fi
-done
-
 echo "setup complete. reboot the machine."

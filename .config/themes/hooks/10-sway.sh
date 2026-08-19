@@ -21,4 +21,6 @@ set \$base0E $B0E
 set \$base0F $B0F
 EOF
 
-swaymsg reload
+if [ -n "$SWAYSOCK" ]; then
+    swaymsg reload
+fi
