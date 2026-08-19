@@ -62,7 +62,4 @@ for hook in "$THEMES/hooks/"*; do
     fi
 done
 
-echo "enabling services..."
-sudo systemctl enable --now docker bluetooth systemd-timesyncd
-
 echo "setup complete. reboot the machine."
