@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BG_DIR="$HOME/.config/backgrounds"
+BG_DIR="$HOME/dotfiles/.config/backgrounds"
 SYMLINK="$HOME/.config/backgrounds/current"
 
 CURRENT_BG=""

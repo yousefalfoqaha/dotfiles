@@ -10,5 +10,5 @@ if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     export XDG_CURRENT_DESKTOP=sway
     export MOZ_ENABLE_WAYLAND=1
     
-    exec sway
+    exec sway --unsupported-gpu
 fi

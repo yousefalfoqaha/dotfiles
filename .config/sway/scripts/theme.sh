@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-THEMES="$HOME/.config/themes"
+THEMES="$HOME/dotfiles/.config/themes"
 CURRENT="$THEMES/current"
 
 CHOICE=$(find "$THEMES" -maxdepth 1 -type f -name "*.sh" -exec basename {} .sh \; | tofi --prompt-text="theme: ")
