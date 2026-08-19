@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+
+if [[ "$volume" == *"[MUTED]"* ]]; then
+    text="muted"
+    val=0
+else
+    text="volume"
+    val=$(echo "$volume" | awk '{print int($2 * 100)}')
+fi
+
+notify-send -t 1000 -a 'osd' -h string:x-canonical-private-synchronous:audio -h int:value:"$val" "$text" "${val}%"

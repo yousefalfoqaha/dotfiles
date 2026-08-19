@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+val=$(brightnessctl info | sed -En 's/.*\(([0-9]+)%\).*/\1/p')
+notify-send -t 1000 -a 'osd' -h string:x-canonical-private-synchronous:brightness -h int:value:"$val" "brightness" "${val}%"
