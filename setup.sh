@@ -9,8 +9,8 @@ CORE_PKGS=(
     libnotify libreoffice-fresh mako man-db man-pages mise noto-fonts 
     noto-fonts-cjk noto-fonts-emoji openssh pipewire-alsa pipewire-pulse 
     ripgrep slurp sway swaybg texinfo tmux tree-sitter tree-sitter-cli 
-    ttf-iosevka-nerd ttf-liberation unzip waybar wl-clipboard 
-    xdg-desktop-portal-gtk xdg-desktop-portal-wlr zoxide
+    ttf-iosevka-nerd ttf-liberation unzip wl-clipboard 
+    xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr zoxide
 )
 
 AUR_PKGS=(

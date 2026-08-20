@@ -14,16 +14,12 @@ if [[ -r /usr/share/bash-completion/bash_completion ]]; then
 fi
 
 export PATH="$HOME/.local/share/mise/shims:$PATH"
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
+export CDPATH=".:~:~/repos"
 
 alias ls='eza --color=always --group-directories-first'
 alias ll='eza -la --color=always --group-directories-first'
 alias tree='eza --tree'
 alias cat='bat --style=plain' 
 
-if [ -z "$SSH_AUTH_SOCK" ] || ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
-    eval "$(ssh-agent -s > /dev/null)"
-fi
-
-eval "$(zoxide init bash)"
 eval "$(mise activate bash)"
-eval "$(fzf --bash)"
