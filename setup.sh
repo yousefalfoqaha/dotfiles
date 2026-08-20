@@ -5,12 +5,12 @@ echo "starting system setup..."
 
 CORE_PKGS=(
     base-devel bash-completion bat bluez bluez-utils brightnessctl docker 
-    eza fd firefox foot fzf gnome-themes-extra grim htop j4-dmenu-desktop 
+    eza firefox foot gnome-themes-extra grim htop j4-dmenu-desktop 
     libnotify libreoffice-fresh mako man-db man-pages mise noto-fonts 
     noto-fonts-cjk noto-fonts-emoji openssh pipewire-alsa pipewire-pulse 
     ripgrep slurp sway swaybg texinfo tmux tree-sitter tree-sitter-cli 
     ttf-iosevka-nerd ttf-liberation unzip wl-clipboard 
-    xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr zoxide
+    xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr
 )
 
 AUR_PKGS=(

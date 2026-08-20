@@ -26,10 +26,7 @@ vim.pack.add({
 })
 
 require("options")
-
 require("keymaps")
 require("autocmds")
-
 require("packs")
 require("theme")
-require("find")
