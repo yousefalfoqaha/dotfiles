@@ -4,10 +4,10 @@ CURRENT="$HOME/.config/themes/current"
 
 cat << EOF > "$CURRENT/mako"
 font=Iosevka Nerd Font 10
-background-color=${B00}
+background-color=${B01}
 text-color=${B05}
 border-color=${B02}
-progress-color=${B0D}80
+progress-color=${B0D}50
 
 border-size=1
 border-radius=0
@@ -23,7 +23,6 @@ format=<b>%s</b>\n%b
 background-color=${B01}
 text-color=${B08}
 border-color=${B08}
-border-size=1
 default-timeout=0
 
 [app-name=osd]
