@@ -38,4 +38,4 @@ ascii-input = false
 selection-background-padding = 2, -1
 selection-background-corner-radius = 0
 
-include = ../themes/current/tofi
+include = ~/.local/state/theme/tofi

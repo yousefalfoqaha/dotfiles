@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source "$HOME/.config/themes/current/base16.sh"
-CURRENT="$HOME/.config/themes/current"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
 
-cat << EOF > "$CURRENT/tmux"
+cat << EOF > "$DOTFILES_THEME_STATE/tmux"
 set -g status-style "fg=$B04"
 set -g window-status-style "fg=$B04"
 set -g window-status-current-style "fg=$B05"
@@ -13,5 +13,4 @@ set -g message-style "bg=$B01,fg=$B05"
 set -g message-command-style "bg=$B01,fg=$B05"
 EOF
 
-tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
-
+tmux source-file "$DOTFILES_CONFIG_HOME/tmux/tmux.conf" 2>/dev/null || true

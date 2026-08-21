@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source "$HOME/.config/themes/current/base16.sh"
-CURRENT="$HOME/.config/themes/current"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
 
-cat << EOF > "$CURRENT/sway"
+cat << EOF > "$DOTFILES_THEME_STATE/sway"
 set \$base00 $B00
 set \$base01 $B01
 set \$base02 $B02

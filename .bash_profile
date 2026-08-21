@@ -2,6 +2,10 @@
 # ~/.bash_profile
 #
 
+export PATH="$HOME/.local/bin:$PATH"
+
+[[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh" ]] && . "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then

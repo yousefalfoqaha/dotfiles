@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-source "$HOME/.config/themes/current/base16.sh"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
 
 if [ -n "$BACKGROUND" ]; then
-    BG_DIR="$HOME/.config/backgrounds"
+    BG_DIR="$DOTFILES_BACKGROUND_DIR"
     TARGET="$BG_DIR/$BACKGROUND"
-    SYMLINK="$HOME/.config/backgrounds/current"
+    SYMLINK="$DOTFILES_BACKGROUND_STATE"
 
     if [ -f "$TARGET" ]; then
-        ln -sf "$TARGET" "$SYMLINK"
+        mkdir -p "$(dirname "$SYMLINK")"
+        ln -sfn "$TARGET" "$SYMLINK"
 
         if [ -n "$SWAYSOCK" ]; then
             swaymsg output "*" bg "$TARGET" fill

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source "$HOME/.config/themes/current/base16.sh"
-CURRENT="$HOME/.config/themes/current"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
 
-cat << EOF > "$CURRENT/mako"
+cat << EOF > "$DOTFILES_THEME_STATE/mako"
 font=Iosevka Nerd Font 10
 background-color=${B01}
 text-color=${B05}
@@ -36,8 +36,8 @@ format=<b>%s</b>\n%b
 invisible=0
 EOF
 
-mkdir -p "$HOME/.config/mako"
-ln -sf "$CURRENT/mako" "$HOME/.config/mako/config"
+mkdir -p "$DOTFILES_CONFIG_HOME/mako"
+ln -sfn "$DOTFILES_THEME_STATE/mako" "$DOTFILES_CONFIG_HOME/mako/config"
 
 if [ -n "$SWAYSOCK" ]; then
     makoctl reload

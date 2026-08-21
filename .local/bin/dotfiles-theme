@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+
+THEMES="$DOTFILES_THEME_PRESETS"
+WORKSTATION="workstation"
+
+if [ -n "$1" ]; then
+    CHOICE="$1"
+else
+    CHOICE=$(find "$THEMES" -maxdepth 1 -type f -name "*.sh" -exec basename {} .sh \; | tofi --prompt-text="theme: ")
+    [ -z "$CHOICE" ] && exit 1
+fi
+
+if [ "$CHOICE" != "${CHOICE##*/}" ] || [ ! -f "$THEMES/$CHOICE.sh" ]; then
+    exit 1
+fi
+
+mkdir -p "$DOTFILES_THEME_STATE"
+ln -sfn "$THEMES/$CHOICE.sh" "$DOTFILES_THEME_STATE/base16.sh"
+
+for hook in "$DOTFILES_THEME_HOME/hooks/"*; do
+    if [ -x "$hook" ]; then
+        "$hook"
+    fi
+done
+
+if [ -z "$1" ]; then
+    ssh "$WORKSTATION" "\$HOME/.local/bin/dotfiles-theme '$CHOICE'" > /dev/null 2>&1 &
+fi

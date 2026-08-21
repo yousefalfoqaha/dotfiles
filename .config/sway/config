@@ -1,4 +1,4 @@
-include ~/.config/themes/current/sway
+include ~/.local/state/theme/sway
 include ~/.config/sway/config.d/variables.conf
 include ~/.config/sway/config.d/system.conf
 include ~/.config/sway/config.d/window.conf

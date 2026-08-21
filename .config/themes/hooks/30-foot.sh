@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source "$HOME/.config/themes/current/base16.sh"
-CURRENT="$HOME/.config/themes/current"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
 
-cat << EOF > "$CURRENT/foot"
+cat << EOF > "$DOTFILES_THEME_STATE/foot"
 [colors-dark]
 background=${B00:1}
 foreground=${B05:1}
@@ -57,4 +57,3 @@ for tty in /dev/pts/[0-9]*; do
         printf "%s" "$SEQ" > "$tty"
     fi
 done
-

@@ -1,7 +1,9 @@
-CURRENT="$HOME/.config/themes/current"
-source "$CURRENT/base16.sh"
+#!/usr/bin/env bash
 
-cat << EOF > "$CURRENT/tofi"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$DOTFILES_THEME_STATE/base16.sh"
+
+cat << EOF > "$DOTFILES_THEME_STATE/tofi"
 background-color = ${B00}d9
 text-color = $B05
 prompt-color = $B0D

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-BG_DIR="$HOME/dotfiles/.config/backgrounds"
-SYMLINK="$HOME/.config/backgrounds/current"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+
+BG_DIR="$DOTFILES_BACKGROUND_DIR"
+SYMLINK="$DOTFILES_BACKGROUND_STATE"
 
 CURRENT_BG=""
 if [ -L "$SYMLINK" ]; then
@@ -26,6 +28,7 @@ if [ -n "$CHOICE" ]; then
     CLEAN_CHOICE="${CHOICE#\* }"
     TARGET="$BG_DIR/$CLEAN_CHOICE"
 
-    ln -sf "$TARGET" "$SYMLINK"
+    mkdir -p "$(dirname "$SYMLINK")"
+    ln -sfn "$TARGET" "$SYMLINK"
     swaymsg output "*" bg "$TARGET" fill
 fi
