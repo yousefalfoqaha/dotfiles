@@ -36,6 +36,9 @@ format=<b>%s</b>
 outer-margin=8,0,8,8
 text-alignment=center
 
+[category=media]
+width=500
+
 [app-name=osd grouped=false]
 invisible=0
 EOF

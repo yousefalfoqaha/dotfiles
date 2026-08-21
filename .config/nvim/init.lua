@@ -3,6 +3,7 @@ local github = function(x)
 end
 vim.pack.add({
 	-- themes
+	{ src = github("marko-cerovac/material.nvim") },
 	{ src = github("neanias/everforest-nvim") },
 	{ src = github("loctvl842/monokai-pro.nvim") },
 	{ src = github("luisiacc/gruvbox-baby") },

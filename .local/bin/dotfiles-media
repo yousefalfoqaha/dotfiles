@@ -27,5 +27,6 @@ esac
 
 notify-send -t 1500 \
     -a 'osd' \
+    -c 'media' \
     -h string:x-canonical-private-synchronous:media \
     "$MESSAGE"

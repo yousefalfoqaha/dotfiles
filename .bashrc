@@ -15,7 +15,6 @@ fi
 
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
-export CDPATH=".:~:~/repos"
 
 alias ls='eza --color=always --group-directories-first'
 alias ll='eza -la --color=always --group-directories-first'
