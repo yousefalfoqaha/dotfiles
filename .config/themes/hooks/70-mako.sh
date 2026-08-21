@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
 source "$DOTFILES_THEME_STATE/base16.sh"
+source "$DOTFILES_FONT_HOME/$(cat "$DOTFILES_FONT_STATE").sh"
 
 cat << EOF > "$DOTFILES_THEME_STATE/mako"
-font=Iosevka Nerd Font 10
+font=${FONT_BASE} ${FONT_BASE_SIZE}
 background-color=${B01}
 text-color=${B05}
 border-color=${B02}

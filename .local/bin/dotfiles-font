@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+
+if [ -n "$1" ]; then
+    CHOICE="$1"
+else
+    FONT_CHOICES=()
+    for font in "$DOTFILES_FONT_HOME"/*.sh; do
+        [ -f "$font" ] || continue
+        FONT_CHOICES+=("$(basename "$font" .sh)")
+    done
+
+    [ "${#FONT_CHOICES[@]}" -gt 0 ] || exit 1
+    CHOICE=$(printf '%s\n' "${FONT_CHOICES[@]}" | sort | tofi --prompt-text="font: ")
+    [ -z "$CHOICE" ] && exit 1
+fi
+
+if [ "$CHOICE" != "${CHOICE##*/}" ] || [ ! -f "$DOTFILES_FONT_HOME/$CHOICE.sh" ]; then
+    exit 1
+fi
+
+mkdir -p "$(dirname "$DOTFILES_FONT_STATE")"
+printf '%s\n' "$CHOICE" > "$DOTFILES_FONT_STATE"
+
+if [ ! -f "$DOTFILES_THEME_STATE/preset" ]; then
+    exit 1
+fi
+
+if "$HOME/.local/bin/dotfiles-theme" "$(cat "$DOTFILES_THEME_STATE/preset")"; then
+    notify-send "font changed" "restart foot to apply it"
+fi

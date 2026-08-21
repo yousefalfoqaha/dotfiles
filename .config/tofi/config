@@ -1,5 +1,3 @@
-font = "Iosevka Nerd Font, Noto Sans Arabic"
-font-size = 14
 hint-font = true
 text-cursor-style = block
 text-cursor-corner-radius = 0

@@ -2,8 +2,11 @@
 
 source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
 source "$DOTFILES_THEME_STATE/base16.sh"
+source "$DOTFILES_FONT_HOME/$(cat "$DOTFILES_FONT_STATE").sh"
 
 cat << EOF > "$DOTFILES_THEME_STATE/tofi"
+font = "$FONT_BASE, Noto Sans"
+font-size = $FONT_MENU_SIZE
 background-color = ${B00}d9
 text-color = $B05
 prompt-color = $B0D

@@ -8,8 +8,8 @@ CORE_PKGS=(
     eza firefox foot gnome-themes-extra grim htop j4-dmenu-desktop 
     libnotify libreoffice-fresh mako man-db man-pages mise noto-fonts 
     noto-fonts-cjk noto-fonts-emoji openssh pipewire-alsa pipewire-pulse 
-    ripgrep slurp sway swaybg texinfo tmux tree-sitter tree-sitter-cli 
-    ttf-iosevka-nerd ttf-liberation unzip wl-clipboard wlsunset
+    ripgrep slurp sway swaybg swayidle texinfo tmux tree-sitter tree-sitter-cli
+    ttf-iosevka-nerd ttf-jetbrains-mono-nerd ttf-liberation unzip wl-clipboard wlsunset
     xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr
 )
 
@@ -44,6 +44,8 @@ mkdir -p "$HOME/.config"
 rm -rf "$HOME/.config/backgrounds"
 rm -rf "$HOME/.config/dotfiles"
 ln -s "$DOTFILES_DIR/.config/dotfiles" "$HOME/.config/dotfiles"
+rm -rf "$HOME/.config/fonts"
+ln -s "$DOTFILES_DIR/.config/fonts" "$HOME/.config/fonts"
 rm -rf "$HOME/.config/foot"
 ln -s "$DOTFILES_DIR/.config/foot" "$HOME/.config/foot"
 rm -rf "$HOME/.config/mise"
@@ -78,6 +80,8 @@ rm -f "$HOME/.local/bin/dotfiles-system"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-system" "$HOME/.local/bin/dotfiles-system"
 rm -f "$HOME/.local/bin/dotfiles-theme"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-theme" "$HOME/.local/bin/dotfiles-theme"
+rm -f "$HOME/.local/bin/dotfiles-font"
+ln -s "$DOTFILES_DIR/.local/bin/dotfiles-font" "$HOME/.local/bin/dotfiles-font"
 rm -f "$HOME/.local/bin/dotfiles-volume"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-volume" "$HOME/.local/bin/dotfiles-volume"
 rm -f "$HOME/.local/bin/dotfiles-wifi"
@@ -86,6 +90,7 @@ rm -rf "$HOME/.local/share/backgrounds"
 ln -s "$DOTFILES_DIR/.local/share/backgrounds" "$HOME/.local/share/backgrounds"
 
 echo "initializing theme state..."
+printf '%s\n' iosevka > "$HOME/.local/state/font"
 "$HOME/.local/bin/dotfiles-theme" everforest
 
 echo "installing language runtimes via mise..."

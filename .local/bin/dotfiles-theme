@@ -18,6 +18,7 @@ fi
 
 mkdir -p "$DOTFILES_THEME_STATE"
 ln -sfn "$THEMES/$CHOICE.sh" "$DOTFILES_THEME_STATE/base16.sh"
+printf '%s\n' "$CHOICE" > "$DOTFILES_THEME_STATE/preset"
 
 for hook in "$DOTFILES_THEME_HOME/hooks/"*; do
     if [ -x "$hook" ]; then

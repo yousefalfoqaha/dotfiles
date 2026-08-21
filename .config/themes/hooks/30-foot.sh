@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
 source "$DOTFILES_THEME_STATE/base16.sh"
+source "$DOTFILES_FONT_HOME/$(cat "$DOTFILES_FONT_STATE").sh"
 
 cat << EOF > "$DOTFILES_THEME_STATE/foot"
+[main]
+font=${FONT_MONO}:size=${FONT_MONO_SIZE}
+
 [colors-dark]
 background=${B00:1}
 foreground=${B05:1}
