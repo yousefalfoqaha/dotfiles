@@ -14,7 +14,7 @@ border-size=1
 border-radius=0
 padding=4
 # Top, Right, Bottom, Left
-outer-margin=8,0,8,8
+outer-margin=8,0,10,8
 
 anchor=bottom-right
 default-timeout=5000
@@ -33,7 +33,7 @@ history=0
 anchor=bottom-center
 group-by=app-name
 format=<b>%s</b>
-outer-margin=8,0,8,8
+outer-margin=8,0,10,8
 text-alignment=center
 
 [category=media]

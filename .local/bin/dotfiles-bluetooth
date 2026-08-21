@@ -4,11 +4,23 @@ if ! command -v bluetoothctl >/dev/null 2>&1 || [ -z "$(bluetoothctl list 2>/dev
     exit 0
 fi
 
-chosen=$(bluetoothctl devices | sed 's/^Device //g' | awk '{ mac=$1; $1=""; sub(/^ /, ""); print $0 " - " mac }' | tofi --prompt-text="bluetooth: ")
+device_list=""
+while read -r _ mac name; do
+    if bluetoothctl info "$mac" 2>/dev/null | grep -q "Connected: yes"; then
+        prefix="* "
+    else
+        prefix="  "
+    fi
+    device_list+="${prefix}${name} - ${mac}"$'\n'
+done < <(bluetoothctl devices)
+
+[ -z "$device_list" ] && exit 0
+
+chosen=$(printf "%s" "$device_list" | tofi --prompt-text="bluetooth: ")
 [ -z "$chosen" ] && exit 0
 
 mac=$(echo "$chosen" | awk '{print $NF}')
-name=$(echo "$chosen" | sed -E "s/ - $mac$//")
+name=$(echo "$chosen" | sed -E 's/^\*? *//; s/ - [0-9A-Fa-f:]+$//')
 
 if bluetoothctl info "$mac" | grep -q "Connected: yes"; then
     notify-send -h string:x-canonical-private-synchronous:bluetooth -t 2000 "bluetooth" "disconnecting $name..."

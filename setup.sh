@@ -7,7 +7,7 @@ CORE_PKGS=(
     base-devel bash-completion bat bluez bluez-utils brightnessctl docker 
     eza firefox foot gnome-themes-extra grim htop j4-dmenu-desktop 
     libnotify libreoffice-fresh mako man-db man-pages mise noto-fonts 
-    noto-fonts-cjk noto-fonts-emoji openssh pipewire-alsa pipewire-pulse 
+    noto-fonts-cjk noto-fonts-emoji openssh opencode pipewire-alsa pipewire-pulse 
     ripgrep slurp sway swaybg swayidle texinfo tmux tree-sitter tree-sitter-cli
     ttf-iosevka-nerd ttf-jetbrains-mono-nerd ttf-liberation unzip wl-clipboard wlsunset
     xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr
