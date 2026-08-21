@@ -10,7 +10,7 @@ if [ -L "$SYMLINK" ]; then
     CURRENT_BG=$(basename "$(readlink -f "$SYMLINK")")
 fi
 
-OPTIONS=$(find "$BG_DIR" -maxdepth 1 -type f ! -name "current" \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) -exec basename {} \; | while read -r file; do
+OPTIONS=$(find -L "$BG_DIR" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) -exec basename {} \; | while read -r file; do
     if [ "$file" = "$CURRENT_BG" ]; then
         echo "* $file"
     else

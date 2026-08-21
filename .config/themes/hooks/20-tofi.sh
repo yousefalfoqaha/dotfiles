@@ -13,3 +13,5 @@ placeholder-color = $B03
 selection-color = $B0D
 selection-match-color = $B0A
 EOF
+
+ln -sfn "$DOTFILES_THEME_STATE/tofi" "$DOTFILES_THEME_HOME/tofi"
