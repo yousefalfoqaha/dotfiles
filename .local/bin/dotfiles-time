@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+notify-send -t 5000 "time" "$(date '+%I:%M:%S %p\n%A, %d %b %Y')"

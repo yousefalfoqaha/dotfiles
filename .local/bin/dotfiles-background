@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$HOME/.config/dotfiles/paths.sh"
 
 BG_DIR="$DOTFILES_BACKGROUND_DIR"
 SYMLINK="$DOTFILES_BACKGROUND_STATE"

@@ -4,21 +4,61 @@ set -e
 echo "starting system setup..."
 
 CORE_PKGS=(
-    base-devel bash-completion bat bluez bluez-utils brightnessctl docker 
-    eza firefox foot gnome-themes-extra grim htop j4-dmenu-desktop 
-    libnotify libreoffice-fresh mako man-db man-pages mise noto-fonts 
-    noto-fonts-cjk noto-fonts-emoji openssh opencode pipewire-alsa pipewire-pulse 
-    ripgrep slurp sway swaybg swayidle texinfo tmux tree-sitter tree-sitter-cli
-    ttf-iosevka-nerd ttf-jetbrains-mono-nerd ttf-liberation unzip wl-clipboard wlsunset
-    xorg-xwayland xdg-desktop-portal-gtk xdg-desktop-portal-wlr
+    # base & development
+    base-devel
+    bash-completion
+    man-db
+    man-pages
+    mise
+    podman
+
+    # wayland desktop & window management
+    sway
+    swaybg
+    swayidle
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk
+
+    # terminal & shell utils
+    foot
+    tmux
+    bat
+    eza
+    htop
+    openssh
+
+    # wayland & system utils
+    grim
+    slurp
+    wl-clipboard
+    mako
+    libnotify
+    wlsunset
+    brightnessctl
+    bluez
+    bluez-utils
+    pipewire-pulse
+
+    # graphical
+    firefox
+
+    # ai
+    opencode
+
+    # fonts
+    noto-fonts
+    noto-fonts-emoji
+    ttf-iosevka-nerd
+    ttf-jetbrains-mono-nerd
+    ttf-liberation
 )
 
 AUR_PKGS=(
-    neovim-nightly-bin tofi ttf-ms-aptos-core
+    neovim-nightly-bin tofi
 )
 
 echo "installing native packages..."
-sudo pacman -S --needed --noconfirm "${CORE_PKGS[@]}"
+sudo pacman -Syu --needed --noconfirm "${CORE_PKGS[@]}"
 
 if ! command -v yay &> /dev/null; then
     echo "Installing yay..."
@@ -78,6 +118,8 @@ rm -f "$HOME/.local/bin/dotfiles-status"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-status" "$HOME/.local/bin/dotfiles-status"
 rm -f "$HOME/.local/bin/dotfiles-system"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-system" "$HOME/.local/bin/dotfiles-system"
+rm -f "$HOME/.local/bin/dotfiles-time"
+ln -s "$DOTFILES_DIR/.local/bin/dotfiles-time" "$HOME/.local/bin/dotfiles-time"
 rm -f "$HOME/.local/bin/dotfiles-theme"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-theme" "$HOME/.local/bin/dotfiles-theme"
 rm -f "$HOME/.local/bin/dotfiles-font"
@@ -90,10 +132,6 @@ rm -f "$HOME/.local/bin/dotfiles-wifi"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-wifi" "$HOME/.local/bin/dotfiles-wifi"
 rm -rf "$HOME/.local/share/backgrounds"
 ln -s "$DOTFILES_DIR/.local/share/backgrounds" "$HOME/.local/share/backgrounds"
-
-echo "initializing theme state..."
-printf '%s\n' iosevka > "$HOME/.local/state/font"
-"$HOME/.local/bin/dotfiles-theme" everforest
 
 echo "installing language runtimes via mise..."
 mise install

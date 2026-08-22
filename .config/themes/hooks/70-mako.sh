@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+source "$HOME/.config/dotfiles/paths.sh"
 source "$DOTFILES_THEME_STATE/base16.sh"
 source "$DOTFILES_FONT_HOME/$(cat "$DOTFILES_FONT_STATE").sh"
 
@@ -43,8 +43,8 @@ width=500
 invisible=0
 EOF
 
-mkdir -p "$DOTFILES_CONFIG_HOME/mako"
-ln -sfn "$DOTFILES_THEME_STATE/mako" "$DOTFILES_CONFIG_HOME/mako/config"
+mkdir -p "$HOME/.config/mako"
+ln -sfn "$DOTFILES_THEME_STATE/mako" "$HOME/.config/mako/config"
 
 if [ -n "$SWAYSOCK" ]; then
     makoctl reload

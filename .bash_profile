@@ -4,7 +4,7 @@
 
 export PATH="$HOME/.local/bin:$PATH"
 
-[[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh" ]] && . "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/paths.sh"
+[[ -f "$HOME/.config/dotfiles/paths.sh" ]] && . "$HOME/.config/dotfiles/paths.sh"
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
