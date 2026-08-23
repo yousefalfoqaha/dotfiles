@@ -36,8 +36,14 @@ format=<b>%s</b>
 outer-margin=8,0,10,8
 text-alignment=center
 
-[category=media]
-width=500
+[category=osd-text-small]
+width=200
+
+[category=osd-progress]
+width=400
+
+[category=osd-text-large]
+width=600
 
 [app-name=osd grouped=false]
 invisible=0

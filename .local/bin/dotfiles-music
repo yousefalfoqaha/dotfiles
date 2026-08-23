@@ -4,15 +4,15 @@ osd_media() {
     local prefix="$1" track
     track=$(mpc current 2>/dev/null)
     if [ -n "$track" ]; then
-        notify-send -t 1500 -a 'osd' -c 'media' \
+        notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
             -h string:x-canonical-private-synchronous:media "${prefix}: $(basename "$track")"
     else
         track=$(playerctl --player=mpd metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
         if [ -n "$track" ]; then
-            notify-send -t 1500 -a 'osd' -c 'media' \
+            notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
                 -h string:x-canonical-private-synchronous:media "${prefix}: $track"
         else
-            notify-send -t 1500 -a 'osd' -c 'media' \
+            notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
                 -h string:x-canonical-private-synchronous:media "stopped"
         fi
     fi
@@ -26,7 +26,7 @@ case "$SCOPE" in
 esac
 
 if [ "$SCOPE" = "global" ]; then
-    CHOICE=$(mpc ls | tofi --prompt-text="play (album): ")
+    CHOICE=$(mpc ls | tofi --prompt-text="album: ")
     [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
 
     mpc clear -q
@@ -46,7 +46,7 @@ elif [ "$SCOPE" = "add" ]; then
     mpc -q insert "$CHOICE"
 
     TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
-    notify-send -t 1500 -a "mpd" "added to queue" "$TRACK_NAME"
+    notify-send -t 1500 -a 'osd' -c 'osd-text-large' -h string:x-canonical-private-synchronous:media "added: $TRACK_NAME"
     swaymsg "$MODE_MUSIC" 2>/dev/null || true
 
 elif [ "$SCOPE" = "queue" ]; then
@@ -99,7 +99,7 @@ elif [ "$SCOPE" = "repeat" ]; then
         mpc -q single off
         STATE="repeat off"
     fi
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "$STATE"
+    notify-send -t 1500 -a 'osd' -c 'osd-text-small' -h string:x-canonical-private-synchronous:media "$STATE"
 
 elif [ "$SCOPE" = "remove" ]; then
     POS=$(mpc -f '%position%' current 2>/dev/null)
@@ -123,7 +123,7 @@ elif [ "$SCOPE" = "seek" ]; then
     POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
     TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
     [ -n "$POS" ] || POS="$PERCENT"
-    notify-send -t 1000 -a 'osd' -c 'media' \
+    notify-send -t 1000 -a 'osd' -c 'osd-progress' \
         -h string:x-canonical-private-synchronous:media \
         -h int:value:"$POS" "${TIME:-${PERCENT}%}"
 
@@ -135,11 +135,11 @@ elif [ "$SCOPE" = "seekrel" ]; then
     POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
     TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
     [ -n "$POS" ] || POS=0
-    notify-send -t 1000 -a 'osd' -c 'media' \
+    notify-send -t 1000 -a 'osd' -c 'osd-progress' \
         -h string:x-canonical-private-synchronous:media \
         -h int:value:"$POS" "${TIME:-${OFFSET}s}"
 
 elif [ "$SCOPE" = "clear" ]; then
     mpc clear -q
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "queue cleared"
+    notify-send -t 1500 -a 'osd' -c 'osd-text-small' -h string:x-canonical-private-synchronous:media "queue cleared"
 fi

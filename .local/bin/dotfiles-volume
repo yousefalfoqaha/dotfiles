@@ -10,4 +10,4 @@ else
     val=$(echo "$volume" | awk '{print int($2 * 100)}')
 fi
 
-notify-send -t 1000 -a 'osd' -h string:x-canonical-private-synchronous:audio -h int:value:"$val" "$text" "${val}%"
+notify-send -t 1000 -a 'osd' -c 'osd-progress' -h string:x-canonical-private-synchronous:audio -h int:value:"$val" "$text" "${val}%"

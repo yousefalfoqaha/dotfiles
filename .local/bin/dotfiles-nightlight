@@ -2,11 +2,13 @@
 
 if pgrep -x "wlsunset" > /dev/null; then
     pkill -x "wlsunset"
-    notify-send -h string:x-canonical-private-synchronous:nightlight \
-                -t 2000 "nightlight" "disabled"
+    notify-send -a 'osd' -c 'osd-text-small' \
+                -h string:x-canonical-private-synchronous:nightlight \
+                -t 2000 "nightlight off"
 else
     wlsunset -t 4000 -T 4001 &
     
-    notify-send -h string:x-canonical-private-synchronous:nightlight \
-                -t 2000 "nightlight" "enabled"
+    notify-send -a 'osd' -c 'osd-text-small' \
+                -h string:x-canonical-private-synchronous:nightlight \
+                -t 2000 "nightlight on"
 fi
