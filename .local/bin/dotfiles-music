@@ -19,7 +19,7 @@ osd_media() {
 }
 
 SCOPE="${1:-global}"
-MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d del  x clear | j/k  h/l 0-9 seek"'
+MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d remove  x clear | j/k  h/l 0-9 seek"'
 
 case "$SCOPE" in
     global|add|queue) mpc update -q ;;
@@ -101,7 +101,7 @@ elif [ "$SCOPE" = "repeat" ]; then
     fi
     notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "$STATE"
 
-elif [ "$SCOPE" = "del" ]; then
+elif [ "$SCOPE" = "remove" ]; then
     POS=$(mpc -f '%position%' current 2>/dev/null)
     if [ -n "$POS" ]; then
         mpc -q del "$POS"
