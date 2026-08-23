@@ -53,12 +53,15 @@ echo "==> Downloading and extracting audio..."
 # Download and convert via yt-dlp
 yt-dlp \
     --extract-audio \
+    --no-keep-video \
     --audio-format mp3 \
     --audio-quality 0 \
     --embed-metadata \
-    --embed-thumbnail \
     --output "$TARGET_DIR/%(title)s.%(ext)s" \
     "$URL"
+
+# Clean up non-mp3 artifacts left by yt-dlp
+find "$TARGET_DIR" -type f ! -name '*.mp3' -delete 2>/dev/null || true
 
 # Automatically refresh MPD database if mpd/mpc is installed
 if command -v mpc >/dev/null 2>&1; then
