@@ -4,30 +4,17 @@ set -e
 echo "starting system setup..."
 
 CORE_PKGS=(
-    # base & development
-    base-devel
-    bash-completion
-    man-db
-    man-pages
-    mise
-    podman
-
-    # wayland desktop & window management
+    # wayland desktop 
     sway
     swaybg
     swayidle
     xdg-desktop-portal-wlr
     xdg-desktop-portal-gtk
 
-    # terminal & shell utils
-    foot
-    tmux
-    bat
-    eza
-    htop
-    openssh
+    # x11 compatibility
+    xorg-xwayland
 
-    # wayland & system utils
+    # system utils
     grim
     slurp
     wl-clipboard
@@ -39,11 +26,25 @@ CORE_PKGS=(
     bluez-utils
     pipewire-pulse
 
+    # dev
+    base-devel
+    bash-completion
+    man-db
+    man-pages
+    mise
+    podman
+    opencode
+
+    # shell
+    foot
+    tmux
+    bat
+    eza
+    htop
+    openssh
+
     # graphical
     firefox
-
-    # ai
-    opencode
 
     # fonts
     noto-fonts
