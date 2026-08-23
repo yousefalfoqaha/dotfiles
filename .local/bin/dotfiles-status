@@ -11,6 +11,24 @@ done
 while true; do
     status_elements=()
 
+    # music
+    MPC_STATUS=$(mpc status 2>/dev/null)
+    if echo "$MPC_STATUS" | grep -q '\[playing\]'; then
+        POS=$(echo "$MPC_STATUS" | grep -oE '#[0-9]+/[0-9]+' | tr -d '#')
+        TRACK=$(basename "$(mpc current 2>/dev/null)" | sed 's/\.[^.]*$//')
+        [ ${#TRACK} -gt 100 ] && TRACK="${TRACK:0:24}…"
+
+        MODIFIERS=""
+        echo "$MPC_STATUS" | grep -q 'random: on' && MODIFIERS="s"
+        echo "$MPC_STATUS" | grep -q 'repeat: on' && MODIFIERS="${MODIFIERS:+$MODIFIERS, }r"
+
+        if [ -n "$MODIFIERS" ]; then
+            status_elements+=("$POS ($MODIFIERS) $TRACK")
+        else
+            status_elements+=("$POS $TRACK")
+        fi
+    fi
+
     # bt
     if command -v bluetoothctl >/dev/null 2>&1 && bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
         BT_CONNS=$(bluetoothctl devices Connected 2>/dev/null | wc -l)
