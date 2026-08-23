@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+osd_media() {
+    local prefix="$1" track
+    track=$(mpc current)
+    notify-send -t 1500 -a 'osd' -c 'media' \
+        -h string:x-canonical-private-synchronous:media "${prefix}: $(basename "$track")"
+}
+
 SCOPE="${1:-global}"
 
 case "$SCOPE" in
@@ -7,13 +14,14 @@ case "$SCOPE" in
 esac
 
 if [ "$SCOPE" = "global" ]; then
-    CHOICE=$(mpc listall | tofi --prompt-text="play (new queue): ")
+    CHOICE=$(mpc listall | tofi --prompt-text="play (album): ")
     [ -z "$CHOICE" ] && exit 0
-    
+
     DIRNAME=$(dirname "$CHOICE")
-    
+
     mpc clear -q
-    
+    mpc -q random off
+
     if [ "$DIRNAME" = "." ]; then
         mpc add "$CHOICE"
         mpc -q play 1
@@ -26,39 +34,58 @@ if [ "$SCOPE" = "global" ]; then
             mpc -q play 1
         fi
     fi
-    
-    # Ensure playback actually started (retry once if MPD didn't kick off)
+
     sleep 0.3
     mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
-    
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+    osd_media "playing"
 
 elif [ "$SCOPE" = "add" ]; then
     CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
     [ -z "$CHOICE" ] && exit 0
-    
+
     mpc add "$CHOICE"
-    
+
     TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
     notify-send -t 1500 -a "mpd" "added to queue" "$TRACK_NAME"
 
 elif [ "$SCOPE" = "queue" ]; then
     MAP=$(mpc -f '%position%\t%title%\t%file%' playlist)
     [ -z "$MAP" ] && exit 0
-    
+
     DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' '{ label=$2; if(label==""){n=split($3,a,"/"); label=a[n]} printf "%d. %s\n", $1, label }')
-    CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="queue: ")
+    PROMPT="queue: "
+    mpc status | grep -q 'random: on' && PROMPT="queue (shuffled): "
+    CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="$PROMPT")
     [ -z "$CHOICE" ] && exit 0
-    
+
     POS=${CHOICE%%.*}
     [ -n "$POS" ] && mpc -q play "$POS"
-    
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+    osd_media "playing"
 
 elif [ "$SCOPE" = "toggle" ]; then
-    mpc toggle -q
-    STATE=$(mpc status | grep -o '\[.*\]' | tr -d '[]' | tr '[:upper:]' '[:lower:]')
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "${STATE}: $(basename "$(mpc current)")"
+    playerctl play-pause 2>/dev/null || true
+    sleep 0.2
+    STATUS=$(playerctl status 2>/dev/null || true)
+    TRACK=$(playerctl metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+    [ -n "$TRACK" ] || TRACK="unknown track"
+    MESSAGE="$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]'): $TRACK"
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "$MESSAGE"
+
+elif [ "$SCOPE" = "next" ]; then
+    playerctl next 2>/dev/null || true
+    sleep 0.2
+    TRACK=$(playerctl metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+    [ -n "$TRACK" ] || TRACK="unknown track"
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "next: $TRACK"
+
+elif [ "$SCOPE" = "prev" ]; then
+    playerctl previous 2>/dev/null || true
+    sleep 0.2
+    TRACK=$(playerctl metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+    [ -n "$TRACK" ] || TRACK="unknown track"
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "previous: $TRACK"
 
 elif [ "$SCOPE" = "shuffle" ]; then
     mpc random -q
@@ -75,19 +102,16 @@ elif [ "$SCOPE" = "consume" ]; then
     STATE=$(mpc status | grep -o 'consume: [a-z]*' | awk '{print $2}')
     notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "consume $STATE"
 
-elif [ "$SCOPE" = "next" ]; then
-    mpc -q next
-    sleep 0.2
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
-
-elif [ "$SCOPE" = "prev" ]; then
-    mpc -q cdprev
-    sleep 0.2
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
-
 elif [ "$SCOPE" = "seek" ]; then
     PERCENT="${2:-0}"
-    mpc -q seek "${PERCENT}%"
+    DURATION_US=$(playerctl metadata --format '{{ mpris:length }}' 2>/dev/null)
+    if [ -n "$DURATION_US" ] && [ "$DURATION_US" -gt 0 ] 2>/dev/null; then
+        DURATION_S=$((DURATION_US / 1000000))
+        SEEK_S=$((DURATION_S * PERCENT / 100))
+        playerctl position "$SEEK_S" 2>/dev/null || true
+    else
+        mpc -q seek "${PERCENT}%"
+    fi
     sleep 0.15
     POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
     TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
