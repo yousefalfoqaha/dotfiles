@@ -46,6 +46,7 @@ CORE_PKGS=(
     # graphical
     firefox
     zathura
+    zathura-pdf-mupdf
 
     # fonts
     noto-fonts
