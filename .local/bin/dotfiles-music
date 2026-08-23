@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-MODE_MUSIC='mode "music"'
-
 osd() {
     local class="$1" msg="$2" timeout="${3:-1500}"
     notify-send -t "$timeout" -a 'osd' -c "$class" \
@@ -15,7 +13,7 @@ osd_media() {
 }
 
 back_to_mode() {
-    swaymsg "$MODE_MUSIC" 2>/dev/null || true
+    swaymsg 'mode "music"' 2>/dev/null || true
     exit 0
 }
 
