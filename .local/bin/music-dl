@@ -57,7 +57,7 @@ yt-dlp \
     --audio-format mp3 \
     --audio-quality 0 \
     --embed-metadata \
-    --output "$TARGET_DIR/%(title)s.%(ext)s" \
+    --output "$TARGET_DIR/%(uploader)s - %(title)s.%(ext)s" \
     "$URL"
 
 # Clean up non-mp3 artifacts left by yt-dlp

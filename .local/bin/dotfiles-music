@@ -1,145 +1,168 @@
 #!/usr/bin/env bash
 
+MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d remove  x clear | j/k  h/l 0-9 seek"'
+
+osd() {
+    local class="$1" msg="$2" timeout="${3:-1500}"
+    notify-send -t "$timeout" -a 'osd' -c "$class" \
+        -h string:x-canonical-private-synchronous:media "$msg"
+}
+
 osd_media() {
     local prefix="$1" track
-    track=$(mpc current 2>/dev/null)
-    if [ -n "$track" ]; then
-        notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
-            -h string:x-canonical-private-synchronous:media "${prefix}: $(basename "$track")"
-    else
-        track=$(playerctl --player=mpd metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
-        if [ -n "$track" ]; then
-            notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
-                -h string:x-canonical-private-synchronous:media "${prefix}: $track"
-        else
-            notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
-                -h string:x-canonical-private-synchronous:media "stopped"
-        fi
-    fi
+    track=$(playerctl --player=mpd metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+    [ -n "$track" ] && osd osd-text-large "${prefix}: $track"
+}
+
+back_to_mode() {
+    swaymsg "$MODE_MUSIC" 2>/dev/null || true
+    exit 0
 }
 
 SCOPE="${1:-global}"
-MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d remove  x clear | j/k  h/l 0-9 seek"'
 
 case "$SCOPE" in
     global|add|queue) mpc update -q ;;
 esac
 
-if [ "$SCOPE" = "global" ]; then
-    CHOICE=$(mpc ls | tofi --prompt-text="album: ")
-    [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
+case "$SCOPE" in
+    global)
+        CHOICE=$(mpc ls | tofi --prompt-text="album: ")
+        [ -z "$CHOICE" ] && back_to_mode
 
-    mpc clear -q
-    mpc add "$CHOICE"
-    mpc -q play 1
+        mpc clear -q
+        mpc add "$CHOICE"
+        mpc -q play 1
 
-    sleep 0.3
-    mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
+        sleep 0.3
+        mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
 
-    osd_media "playing"
-    swaymsg "$MODE_MUSIC" 2>/dev/null || true
+        osd_media "playing"
+        back_to_mode
+        ;;
 
-elif [ "$SCOPE" = "add" ]; then
-    CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
-    [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
+    add)
+        CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
+        [ -z "$CHOICE" ] && back_to_mode
 
-    mpc -q insert "$CHOICE"
+        mpc -q insert "$CHOICE"
 
-    TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
-    notify-send -t 1500 -a 'osd' -c 'osd-text-large' -h string:x-canonical-private-synchronous:media "added: $TRACK_NAME"
-    swaymsg "$MODE_MUSIC" 2>/dev/null || true
+        TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
+        osd osd-text-large "added: $TRACK_NAME"
+        back_to_mode
+        ;;
 
-elif [ "$SCOPE" = "queue" ]; then
-    MAP=$(mpc -f '%position%\t%title%\t%file%' playlist)
-    [ -z "$MAP" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
+    queue)
+        MAP=$(mpc -f '%position%\t%artist%\t%title%\t%file%' playlist)
+        [ -z "$MAP" ] && back_to_mode
 
-    CURRENT_POS=$(mpc -f '%position%' current 2>/dev/null)
-    DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' -v cur="$CURRENT_POS" '{ label=$2; if(label==""){n=split($3,a,"/"); label=a[n]} if ($1 == cur) printf "* %d. %s\n", $1, label; else printf "  %d. %s\n", $1, label }')
-    CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="queue: ")
-    [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
+        CURRENT_POS=$(mpc -f '%position%' current 2>/dev/null)
+        DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' -v cur="$CURRENT_POS" '{
+            artist=$2; title=$3
+            if (title == "") {
+                n=split($4,a,"/")
+                label=a[n]
+            } else if (artist == "") {
+                label=title
+            } else {
+                label=artist " - " title
+            }
+            if ($1 == cur) printf "* %d. %s\n", $1, label
+            else printf "  %d. %s\n", $1, label
+        }')
+        CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="queue: ")
+        [ -z "$CHOICE" ] && back_to_mode
 
-    POS=${CHOICE##* }
-    POS="${CHOICE#\* }"
-    POS="${POS#  }"
-    POS=${POS%%.*}
-    [ -n "$POS" ] && mpc -q play "$POS"
+        POS="${CHOICE#\* }"
+        POS="${POS#  }"
+        POS=${POS%%.*}
+        [ -n "$POS" ] && mpc -q play "$POS"
 
-    osd_media "playing"
-    swaymsg "$MODE_MUSIC" 2>/dev/null || true
+        osd_media "playing"
+        back_to_mode
+        ;;
 
-elif [ "$SCOPE" = "toggle" ]; then
-    playerctl --player=mpd play-pause 2>/dev/null || true
-    sleep 0.2
-    STATUS=$(playerctl --player=mpd status 2>/dev/null || true)
-    osd_media "$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]')"
+    toggle)
+        playerctl --player=mpd play-pause 2>/dev/null || true
+        sleep 0.2
+        STATUS=$(playerctl --player=mpd status 2>/dev/null || true)
+        osd_media "$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]')"
+        ;;
 
-elif [ "$SCOPE" = "next" ]; then
-    playerctl --player=mpd next 2>/dev/null || true
-    sleep 0.2
-    osd_media "next"
-
-elif [ "$SCOPE" = "prev" ]; then
-    playerctl --player=mpd previous 2>/dev/null || true
-    sleep 0.2
-    osd_media "previous"
-
-elif [ "$SCOPE" = "repeat" ]; then
-    REPEAT=$(mpc status | grep -o 'repeat: [a-z]*' | awk '{print $2}')
-    SINGLE=$(mpc status | grep -o 'single: [a-z]*' | awk '{print $2}')
-
-    if [ "$REPEAT" = "off" ]; then
-        mpc -q repeat on
-        mpc -q single off
-        STATE="repeat"
-    elif [ "$REPEAT" = "on" ] && [ "$SINGLE" = "off" ]; then
-        mpc -q single on
-        STATE="repeat single"
-    else
-        mpc -q repeat off
-        mpc -q single off
-        STATE="repeat off"
-    fi
-    notify-send -t 1500 -a 'osd' -c 'osd-text-small' -h string:x-canonical-private-synchronous:media "$STATE"
-
-elif [ "$SCOPE" = "remove" ]; then
-    POS=$(mpc -f '%position%' current 2>/dev/null)
-    if [ -n "$POS" ]; then
-        mpc -q del "$POS"
+    next)
+        playerctl --player=mpd next 2>/dev/null || true
+        sleep 0.2
         osd_media "next"
-    fi
+        ;;
 
-elif [ "$SCOPE" = "seek" ]; then
-    mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
-    PERCENT="${2:-0}"
-    DURATION_US=$(playerctl metadata --format '{{ mpris:length }}' 2>/dev/null)
-    if [ -n "$DURATION_US" ] && [ "$DURATION_US" -gt 0 ] 2>/dev/null; then
-        DURATION_S=$((DURATION_US / 1000000))
-        SEEK_S=$((DURATION_S * PERCENT / 100))
-        playerctl position "$SEEK_S" 2>/dev/null || true
-    else
-        mpc -q seek "${PERCENT}%"
-    fi
-    sleep 0.15
-    POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
-    TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
-    [ -n "$POS" ] || POS="$PERCENT"
-    notify-send -t 1000 -a 'osd' -c 'osd-progress' \
-        -h string:x-canonical-private-synchronous:media \
-        -h int:value:"$POS" "${TIME:-${PERCENT}%}"
+    prev)
+        playerctl --player=mpd previous 2>/dev/null || true
+        sleep 0.2
+        osd_media "previous"
+        ;;
 
-elif [ "$SCOPE" = "seekrel" ]; then
-    mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
-    OFFSET="${2:-0}"
-    mpc -q seek "${OFFSET}" 2>/dev/null || true
-    sleep 0.1
-    POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
-    TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
-    [ -n "$POS" ] || POS=0
-    notify-send -t 1000 -a 'osd' -c 'osd-progress' \
-        -h string:x-canonical-private-synchronous:media \
-        -h int:value:"$POS" "${TIME:-${OFFSET}s}"
+    repeat)
+        REPEAT=$(mpc status | grep -o 'repeat: [a-z]*' | awk '{print $2}')
+        SINGLE=$(mpc status | grep -o 'single: [a-z]*' | awk '{print $2}')
 
-elif [ "$SCOPE" = "clear" ]; then
-    mpc clear -q
-    notify-send -t 1500 -a 'osd' -c 'osd-text-small' -h string:x-canonical-private-synchronous:media "queue cleared"
-fi
+        if [ "$REPEAT" = "off" ]; then
+            mpc -q repeat on
+            mpc -q single off
+            STATE="repeat"
+        elif [ "$REPEAT" = "on" ] && [ "$SINGLE" = "off" ]; then
+            mpc -q single on
+            STATE="repeat single"
+        else
+            mpc -q repeat off
+            mpc -q single off
+            STATE="repeat off"
+        fi
+        osd osd-text-small "$STATE"
+        ;;
+
+    remove)
+        POS=$(mpc -f '%position%' current 2>/dev/null)
+        if [ -n "$POS" ]; then
+            mpc -q del "$POS"
+            osd_media "next"
+        fi
+        ;;
+
+    seek)
+        mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
+        PERCENT="${2:-0}"
+        DURATION_US=$(playerctl metadata --format '{{ mpris:length }}' 2>/dev/null)
+        if [ -n "$DURATION_US" ] && [ "$DURATION_US" -gt 0 ] 2>/dev/null; then
+            DURATION_S=$((DURATION_US / 1000000))
+            SEEK_S=$((DURATION_S * PERCENT / 100))
+            playerctl position "$SEEK_S" 2>/dev/null || true
+        else
+            mpc -q seek "${PERCENT}%"
+        fi
+        sleep 0.15
+        POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
+        TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
+        [ -n "$POS" ] || POS="$PERCENT"
+        notify-send -t 1000 -a 'osd' -c 'osd-progress' \
+            -h string:x-canonical-private-synchronous:media \
+            -h int:value:"$POS" "${TIME:-${PERCENT}%}"
+        ;;
+
+    seekrel)
+        mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
+        OFFSET="${2:-0}"
+        mpc -q seek "${OFFSET}" 2>/dev/null || true
+        sleep 0.1
+        POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
+        TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
+        [ -n "$POS" ] || POS=0
+        notify-send -t 1000 -a 'osd' -c 'osd-progress' \
+            -h string:x-canonical-private-synchronous:media \
+            -h int:value:"$POS" "${TIME:-${OFFSET}s}"
+        ;;
+
+    clear)
+        mpc clear -q
+        osd osd-text-small "queue cleared"
+        ;;
+esac

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 ACTION="${1:-play-pause}"
-
 case "$ACTION" in
     play-pause|next|previous|stop) ;;
     *) exit 1 ;;
@@ -9,22 +8,14 @@ esac
 
 playerctl "$ACTION" 2>/dev/null || true
 
-STATUS=$(playerctl status 2>/dev/null || true)
 TRACK=$(playerctl metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+[ -n "$TRACK" ] || exit 0
 
-[ -n "$TRACK" ] || TRACK="unknown track"
-
+STATUS=$(playerctl status 2>/dev/null || true)
 case "$ACTION" in
-    play-pause)
-        MESSAGE="$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]'): $TRACK"
-        ;;
-    *)
-        MESSAGE="$ACTION: $TRACK"
-        ;;
+    play-pause) MESSAGE="$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]'): $TRACK" ;;
+    *)          MESSAGE="$ACTION: $TRACK" ;;
 esac
 
-notify-send -t 1500 \
-    -a 'osd' \
-    -c 'osd-text-large' \
-    -h string:x-canonical-private-synchronous:media \
-    "$MESSAGE"
+notify-send -t 1500 -a 'osd' -c 'osd-text-large' \
+    -h string:x-canonical-private-synchronous:media "$MESSAGE"
