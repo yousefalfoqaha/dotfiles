@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -e
+
+MUSIC_DIR="${HOME}/Music"
+ALBUM=""
+URL=""
+
+usage() {
+    echo "Usage: $(basename "$0") [-a <album_name>] <youtube_url>"
+    echo
+    echo "Options:"
+    echo "  -a <album>    Specify or create an album directory inside ~/Music"
+    echo "  -h            Show this help message"
+    exit 1
+}
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -a|--album)
+            ALBUM="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            if [ -z "$URL" ]; then
+                URL="$1"
+                shift
+            else
+                echo "Error: Unexpected argument '$1'"
+                usage
+            fi
+            ;;
+    esac
+done
+
+if [ -z "$URL" ]; then
+    echo "Error: Missing YouTube URL"
+    usage
+fi
+
+# Determine target directory
+TARGET_DIR="$MUSIC_DIR"
+if [ -n "$ALBUM" ]; then
+    TARGET_DIR="$MUSIC_DIR/$ALBUM"
+    mkdir -p "$TARGET_DIR"
+fi
+
+echo "==> Downloading and extracting audio..."
+
+# Download and convert via yt-dlp
+yt-dlp \
+    --extract-audio \
+    --audio-format mp3 \
+    --audio-quality 0 \
+    --embed-metadata \
+    --embed-thumbnail \
+    --output "$TARGET_DIR/%(title)s.%(ext)s" \
+    "$URL"
+
+# Automatically refresh MPD database if mpd/mpc is installed
+if command -v mpc >/dev/null 2>&1; then
+    mpc update -q
+fi
+
+# Send notification if notify-send is available
+if command -v notify-send >/dev/null 2>&1; then
+    DEST_LABEL="${ALBUM:-Root Library}"
+    notify-send -t 5000 -a "music-dl" -i audio-headphones "download complete" "Saved to $DEST_LABEL"
+fi
+
+echo "==> Done. MPD library updated."

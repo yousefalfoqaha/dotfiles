@@ -24,7 +24,12 @@ CORE_PKGS=(
     brightnessctl
     bluez
     bluez-utils
+    networkmanager
     pipewire-pulse
+    mpd
+    mpc
+    mpd-mpris
+    playerctl
 
     # dev
     base-devel
@@ -106,8 +111,10 @@ rm -rf "$HOME/.config/tofi"
 ln -s "$DOTFILES_DIR/.config/tofi" "$HOME/.config/tofi"
 rm -rf "$HOME/.config/xdg-desktop-portal-wlr"
 ln -s "$DOTFILES_DIR/.config/xdg-desktop-portal-wlr" "$HOME/.config/xdg-desktop-portal-wlr"
+rm -rf "$HOME/.config/mpd"
+ln -s "$DOTFILES_DIR/.config/mpd" "$HOME/.config/mpd"
 
-mkdir -p "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state/theme" "$HOME/.local/state"
+mkdir -p "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state/theme" "$HOME/.local/state" "$HOME/Music"
 rm -f "$HOME/.local/bin/dotfiles-background"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-background" "$HOME/.local/bin/dotfiles-background"
 rm -f "$HOME/.local/bin/dotfiles-bluetooth"
@@ -136,9 +143,19 @@ rm -f "$HOME/.local/bin/dotfiles-wifi"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-wifi" "$HOME/.local/bin/dotfiles-wifi"
 rm -f "$HOME/.local/bin/dotfiles-pdf"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-pdf" "$HOME/.local/bin/dotfiles-pdf"
+rm -f "$HOME/.local/bin/dotfiles-music"
+ln -s "$DOTFILES_DIR/.local/bin/dotfiles-music" "$HOME/.local/bin/dotfiles-music"
+rm -f "$HOME/.local/bin/music-dl"
+ln -s "$DOTFILES_DIR/.local/bin/music-dl" "$HOME/.local/bin/music-dl"
 
 rm -rf "$HOME/.local/share/backgrounds"
 ln -s "$DOTFILES_DIR/.local/share/backgrounds" "$HOME/.local/share/backgrounds"
+
+echo "enabling user services..."
+systemctl --user enable --now mpd mpd-mpris
+
+echo "enabling system services..."
+sudo systemctl enable --now bluetooth NetworkManager
 
 
 echo "installing language runtimes via mise..."

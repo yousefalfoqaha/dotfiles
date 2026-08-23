@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+SCOPE="${1:-global}"
+
+case "$SCOPE" in
+    global|add|queue) mpc update -q ;;
+esac
+
+if [ "$SCOPE" = "global" ]; then
+    CHOICE=$(mpc listall | tofi --prompt-text="play (new queue): ")
+    [ -z "$CHOICE" ] && exit 0
+    
+    DIRNAME=$(dirname "$CHOICE")
+    
+    mpc clear -q
+    
+    if [ "$DIRNAME" = "." ]; then
+        mpc add "$CHOICE"
+        mpc -q play 1
+    else
+        mpc add "$DIRNAME"
+        POS=$(mpc -f '%file%' playlist | grep -nFx -- "$CHOICE" | head -n 1 | cut -d: -f1)
+        if [ -n "$POS" ]; then
+            mpc -q play "$POS"
+        else
+            mpc -q play 1
+        fi
+    fi
+    
+    # Ensure playback actually started (retry once if MPD didn't kick off)
+    sleep 0.3
+    mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
+    
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+elif [ "$SCOPE" = "add" ]; then
+    CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
+    [ -z "$CHOICE" ] && exit 0
+    
+    mpc add "$CHOICE"
+    
+    TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
+    notify-send -t 1500 -a "mpd" "added to queue" "$TRACK_NAME"
+
+elif [ "$SCOPE" = "queue" ]; then
+    MAP=$(mpc -f '%position%\t%title%\t%file%' playlist)
+    [ -z "$MAP" ] && exit 0
+    
+    DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' '{ label=$2; if(label==""){n=split($3,a,"/"); label=a[n]} printf "%d. %s\n", $1, label }')
+    CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="queue: ")
+    [ -z "$CHOICE" ] && exit 0
+    
+    POS=${CHOICE%%.*}
+    [ -n "$POS" ] && mpc -q play "$POS"
+    
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+elif [ "$SCOPE" = "toggle" ]; then
+    mpc toggle -q
+    STATE=$(mpc status | grep -o '\[.*\]' | tr -d '[]' | tr '[:upper:]' '[:lower:]')
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "${STATE}: $(basename "$(mpc current)")"
+
+elif [ "$SCOPE" = "shuffle" ]; then
+    mpc random -q
+    STATE=$(mpc status | grep -o 'random: [a-z]*' | awk '{print $2}')
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "shuffle $STATE"
+
+elif [ "$SCOPE" = "repeat" ]; then
+    mpc repeat -q
+    STATE=$(mpc status | grep -o 'repeat: [a-z]*' | awk '{print $2}')
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "repeat $STATE"
+
+elif [ "$SCOPE" = "consume" ]; then
+    mpc -q consume
+    STATE=$(mpc status | grep -o 'consume: [a-z]*' | awk '{print $2}')
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "consume $STATE"
+
+elif [ "$SCOPE" = "next" ]; then
+    mpc -q next
+    sleep 0.2
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+elif [ "$SCOPE" = "prev" ]; then
+    mpc -q cdprev
+    sleep 0.2
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "playing: $(basename "$(mpc current)")"
+
+elif [ "$SCOPE" = "seek" ]; then
+    PERCENT="${2:-0}"
+    mpc -q seek "${PERCENT}%"
+    sleep 0.15
+    POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
+    TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
+    [ -n "$POS" ] || POS="$PERCENT"
+    notify-send -t 1000 -a 'osd' -c 'media' \
+        -h string:x-canonical-private-synchronous:media \
+        -h int:value:"$POS" "${TIME:-${PERCENT}%}"
+
+elif [ "$SCOPE" = "clear" ]; then
+    mpc clear -q
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "queue cleared"
+fi
