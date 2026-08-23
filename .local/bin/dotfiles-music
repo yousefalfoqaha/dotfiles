@@ -17,28 +17,15 @@ back_to_mode() {
     exit 0
 }
 
-SCOPE="${1:-global}"
+SCOPE="${1:-add}"
 
 case "$SCOPE" in
-    global|add|queue) mpc update -q --wait ;;
+    add|queue) mpc update -q --wait ;;
 esac
 
 case "$SCOPE" in
-    global)
-        CHOICE=$(mpc ls | tofi --prompt-text="album: ")
-        [ -z "$CHOICE" ] && back_to_mode
-
-        mpc clear -q
-        mpc add "$CHOICE"
-        mpc -q play 1
-        mpc status | grep -q '\[playing\]' || mpc -q play 1
-
-        osd_media "playing"
-        back_to_mode
-        ;;
-
     add)
-        CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
+        CHOICE=$(mpc listall | tofi --prompt-text="add: ")
         [ -z "$CHOICE" ] && back_to_mode
 
         mpc -q insert "$CHOICE"
