@@ -19,7 +19,7 @@ osd_media() {
 }
 
 SCOPE="${1:-global}"
-MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  x clear | j/k seek±  h/l 0-9 seek"'
+MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d del  x clear | j/k  h/l 0-9 seek"'
 
 case "$SCOPE" in
     global|add|queue) mpc update -q ;;
@@ -43,7 +43,7 @@ elif [ "$SCOPE" = "add" ]; then
     CHOICE=$(mpc listall | tofi --prompt-text="add to queue: ")
     [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
 
-    mpc add "$CHOICE"
+    mpc -q insert "$CHOICE"
 
     TRACK_NAME=$(basename "$CHOICE" | tr '[:upper:]' '[:lower:]')
     notify-send -t 1500 -a "mpd" "added to queue" "$TRACK_NAME"
@@ -53,11 +53,15 @@ elif [ "$SCOPE" = "queue" ]; then
     MAP=$(mpc -f '%position%\t%title%\t%file%' playlist)
     [ -z "$MAP" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
 
-    DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' '{ label=$2; if(label==""){n=split($3,a,"/"); label=a[n]} printf "%d. %s\n", $1, label }')
+    CURRENT_POS=$(mpc -f '%position%' current 2>/dev/null)
+    DISPLAY=$(printf '%s\n' "$MAP" | awk -F'\t' -v cur="$CURRENT_POS" '{ label=$2; if(label==""){n=split($3,a,"/"); label=a[n]} if ($1 == cur) printf "* %d. %s\n", $1, label; else printf "  %d. %s\n", $1, label }')
     CHOICE=$(printf '%s\n' "$DISPLAY" | tofi --prompt-text="queue: ")
     [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
 
-    POS=${CHOICE%%.*}
+    POS=${CHOICE##* }
+    POS="${CHOICE#\* }"
+    POS="${POS#  }"
+    POS=${POS%%.*}
     [ -n "$POS" ] && mpc -q play "$POS"
 
     osd_media "playing"
@@ -80,9 +84,29 @@ elif [ "$SCOPE" = "prev" ]; then
     osd_media "previous"
 
 elif [ "$SCOPE" = "repeat" ]; then
-    mpc repeat -q
-    STATE=$(mpc status | grep -o 'repeat: [a-z]*' | awk '{print $2}')
-    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "repeat $STATE"
+    REPEAT=$(mpc status | grep -o 'repeat: [a-z]*' | awk '{print $2}')
+    SINGLE=$(mpc status | grep -o 'single: [a-z]*' | awk '{print $2}')
+
+    if [ "$REPEAT" = "off" ]; then
+        mpc -q repeat on
+        mpc -q single off
+        STATE="repeat"
+    elif [ "$REPEAT" = "on" ] && [ "$SINGLE" = "off" ]; then
+        mpc -q single on
+        STATE="repeat single"
+    else
+        mpc -q repeat off
+        mpc -q single off
+        STATE="repeat off"
+    fi
+    notify-send -t 1500 -a 'osd' -c 'media' -h string:x-canonical-private-synchronous:media "$STATE"
+
+elif [ "$SCOPE" = "del" ]; then
+    POS=$(mpc -f '%position%' current 2>/dev/null)
+    if [ -n "$POS" ]; then
+        mpc -q del "$POS"
+        osd_media "next"
+    fi
 
 elif [ "$SCOPE" = "seek" ]; then
     mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0

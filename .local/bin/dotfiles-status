@@ -20,7 +20,11 @@ while true; do
         TIME=$(echo "$MPC_STATUS" | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
 
         if echo "$MPC_STATUS" | grep -q 'repeat: on'; then
-            status_elements+=("$POS (repeat) $TRACK ($TIME)")
+            if echo "$MPC_STATUS" | grep -q 'single: on'; then
+                status_elements+=("$POS (repeat single) $TRACK ($TIME)")
+            else
+                status_elements+=("$POS (repeat) $TRACK ($TIME)")
+            fi
         else
             status_elements+=("$POS $TRACK ($TIME)")
         fi
