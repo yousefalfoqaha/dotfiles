@@ -45,6 +45,7 @@ CORE_PKGS=(
 
     # graphical
     firefox
+    zathura
 
     # fonts
     noto-fonts
@@ -131,8 +132,12 @@ rm -f "$HOME/.local/bin/dotfiles-volume"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-volume" "$HOME/.local/bin/dotfiles-volume"
 rm -f "$HOME/.local/bin/dotfiles-wifi"
 ln -s "$DOTFILES_DIR/.local/bin/dotfiles-wifi" "$HOME/.local/bin/dotfiles-wifi"
+rm -f "$HOME/.local/bin/dotfiles-pdf"
+ln -s "$DOTFILES_DIR/.local/bin/dotfiles-pdf" "$HOME/.local/bin/dotfiles-pdf"
+
 rm -rf "$HOME/.local/share/backgrounds"
 ln -s "$DOTFILES_DIR/.local/share/backgrounds" "$HOME/.local/share/backgrounds"
+
 
 echo "installing language runtimes via mise..."
 mise install

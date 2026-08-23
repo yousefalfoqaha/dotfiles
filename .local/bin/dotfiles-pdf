@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+DOCS_DIR="${1:-$HOME/Documents}"
+
+# Ensure directory exists
+if [ ! -d "$DOCS_DIR" ]; then
+    exit 1
+fi
+
+# Find all PDFs recursively and get relative paths
+# Uses `fd` if installed, falls back to standard `find`
+if command -v fd >/dev/null 2>&1; then
+    OPTIONS=$(fd -e pdf --base-directory "$DOCS_DIR" . | sort)
+else
+    OPTIONS=$(find "$DOCS_DIR" -type f -iname "*.pdf" -printf "%P\n" | sort)
+fi
+
+if [ -z "$OPTIONS" ]; then
+    exit 0
+fi
+
+# Select document via tofi
+CHOICE=$(echo "$OPTIONS" | tofi --prompt-text="pdf: ")
+
+# Open in background with stdout/stderr suppressed
+if [ -n "$CHOICE" ]; then
+    TARGET="$DOCS_DIR/$CHOICE"
+    nohup zathura "$TARGET" >/dev/null 2>&1 &
+fi
