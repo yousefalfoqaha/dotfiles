@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MODE_MUSIC='mode "music: enter album | a add  q queue | p play  r repeat  d remove  x clear | j/k  h/l 0-9 seek"'
+MODE_MUSIC='mode "music"'
 
 osd() {
     local class="$1" msg="$2" timeout="${3:-1500}"
@@ -22,7 +22,7 @@ back_to_mode() {
 SCOPE="${1:-global}"
 
 case "$SCOPE" in
-    global|add|queue) mpc update -q ;;
+    global|add|queue) mpc update -q --wait ;;
 esac
 
 case "$SCOPE" in
@@ -33,9 +33,7 @@ case "$SCOPE" in
         mpc clear -q
         mpc add "$CHOICE"
         mpc -q play 1
-
-        sleep 0.3
-        mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
+        mpc status | grep -q '\[playing\]' || mpc -q play 1
 
         osd_media "playing"
         back_to_mode
@@ -84,20 +82,17 @@ case "$SCOPE" in
 
     toggle)
         playerctl --player=mpd play-pause 2>/dev/null || true
-        sleep 0.2
         STATUS=$(playerctl --player=mpd status 2>/dev/null || true)
         osd_media "$(printf '%s' "$STATUS" | tr '[:upper:]' '[:lower:]')"
         ;;
 
     next)
         playerctl --player=mpd next 2>/dev/null || true
-        sleep 0.2
         osd_media "next"
         ;;
 
     prev)
         playerctl --player=mpd previous 2>/dev/null || true
-        sleep 0.2
         osd_media "previous"
         ;;
 
@@ -131,15 +126,7 @@ case "$SCOPE" in
     seek)
         mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
         PERCENT="${2:-0}"
-        DURATION_US=$(playerctl metadata --format '{{ mpris:length }}' 2>/dev/null)
-        if [ -n "$DURATION_US" ] && [ "$DURATION_US" -gt 0 ] 2>/dev/null; then
-            DURATION_S=$((DURATION_US / 1000000))
-            SEEK_S=$((DURATION_S * PERCENT / 100))
-            playerctl position "$SEEK_S" 2>/dev/null || true
-        else
-            mpc -q seek "${PERCENT}%"
-        fi
-        sleep 0.15
+        mpc -q seek "${PERCENT}%" 2>/dev/null || true
         POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
         TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
         [ -n "$POS" ] || POS="$PERCENT"
@@ -152,7 +139,6 @@ case "$SCOPE" in
         mpc status | grep -qE '\[playing\]|\[paused\]' || exit 0
         OFFSET="${2:-0}"
         mpc -q seek "${OFFSET}" 2>/dev/null || true
-        sleep 0.1
         POS=$(mpc status | grep -oE '\([0-9]+%\)' | tr -d '()%')
         TIME=$(mpc status | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
         [ -n "$POS" ] || POS=0
