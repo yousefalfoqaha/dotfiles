@@ -30,7 +30,7 @@ while true; do
         fi
     elif [ -n "$(mpc playlist 2>/dev/null)" ]; then
         COUNT=$(mpc playlist 2>/dev/null | wc -l)
-        status_elements+=("${COUNT} songs queued")
+        status_elements+=("${COUNT} song(s) queued")
     fi
 
     # bt
