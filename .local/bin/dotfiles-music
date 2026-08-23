@@ -2,13 +2,19 @@
 
 osd_media() {
     local prefix="$1" track
-    track=$(playerctl --player=mpd metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+    track=$(mpc current 2>/dev/null)
     if [ -n "$track" ]; then
         notify-send -t 1500 -a 'osd' -c 'media' \
-            -h string:x-canonical-private-synchronous:media "${prefix}: $track"
+            -h string:x-canonical-private-synchronous:media "${prefix}: $(basename "$track")"
     else
-        notify-send -t 1500 -a 'osd' -c 'media' \
-            -h string:x-canonical-private-synchronous:media "stopped"
+        track=$(playerctl --player=mpd metadata --format '{{ artist }} - {{ title }}' 2>/dev/null || true)
+        if [ -n "$track" ]; then
+            notify-send -t 1500 -a 'osd' -c 'media' \
+                -h string:x-canonical-private-synchronous:media "${prefix}: $track"
+        else
+            notify-send -t 1500 -a 'osd' -c 'media' \
+                -h string:x-canonical-private-synchronous:media "stopped"
+        fi
     fi
 }
 
@@ -20,25 +26,12 @@ case "$SCOPE" in
 esac
 
 if [ "$SCOPE" = "global" ]; then
-    CHOICE=$(mpc listall | tofi --prompt-text="play (album): ")
+    CHOICE=$(mpc ls | tofi --prompt-text="play (album): ")
     [ -z "$CHOICE" ] && { swaymsg "$MODE_MUSIC" 2>/dev/null || true; exit 0; }
 
-    DIRNAME=$(dirname "$CHOICE")
-
     mpc clear -q
-
-    if [ "$DIRNAME" = "." ]; then
-        mpc add "$CHOICE"
-        mpc -q play 1
-    else
-        mpc add "$DIRNAME"
-        POS=$(mpc -f '%file%' playlist | grep -nFx -- "$CHOICE" | head -n 1 | cut -d: -f1)
-        if [ -n "$POS" ]; then
-            mpc -q play "$POS"
-        else
-            mpc -q play 1
-        fi
-    fi
+    mpc add "$CHOICE"
+    mpc -q play 1
 
     sleep 0.3
     mpc status | grep -q '\[playing\]' || { mpc -q play 1; sleep 0.3; }
