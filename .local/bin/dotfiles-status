@@ -17,7 +17,7 @@ while true; do
     if echo "$MPC_STATUS" | grep -qE '\[playing\]|\[paused\]'; then
         POS=$(echo "$MPC_STATUS" | grep -oE '#[0-9]+/[0-9]+' | tr -d '#')
         TRACK=$(basename "$(mpc current 2>/dev/null)" | sed 's/\.[^.]*$//')
-        TRACK="${TRACK:0:100}$([[ ${#TRACK} -gt 100 ]] && echo "…")"
+        TRACK="${TRACK:0:75}$([[ ${#TRACK} -gt 75 ]] && echo "…")"
         TIME=$(echo "$MPC_STATUS" | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
         VOL=$(echo "$MPC_STATUS" | grep -o 'volume:[ ]*[0-9]*%' | sed 's/volume:[ ]*/vol /')
 

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+notify-send -h string:x-canonical-private-synchronous:bluetooth -t 5000 "clock" "$(date '+%I:%M:%S %p\n%A, %d %b %Y')"
+
