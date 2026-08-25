@@ -13,24 +13,37 @@ while true; do
 
     # music
     MPC_STATUS=$(mpc status 2>/dev/null)
+    
     if echo "$MPC_STATUS" | grep -qE '\[playing\]|\[paused\]'; then
         POS=$(echo "$MPC_STATUS" | grep -oE '#[0-9]+/[0-9]+' | tr -d '#')
         TRACK=$(basename "$(mpc current 2>/dev/null)" | sed 's/\.[^.]*$//')
-        [ ${#TRACK} -gt 100 ] && TRACK="${TRACK:0:24}…"
+        TRACK="${TRACK:0:100}$([[ ${#TRACK} -gt 100 ]] && echo "…")"
         TIME=$(echo "$MPC_STATUS" | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
+        VOL=$(echo "$MPC_STATUS" | grep -o 'volume:[ ]*[0-9]*%' | sed 's/volume:[ ]*/vol /')
 
-        if echo "$MPC_STATUS" | grep -q 'repeat: on'; then
-            if echo "$MPC_STATUS" | grep -q 'single: on'; then
-                status_elements+=("$POS (repeat single) $TRACK ($TIME)")
-            else
-                status_elements+=("$POS (repeat) $TRACK ($TIME)")
-            fi
-        else
-            status_elements+=("$POS $TRACK ($TIME)")
+        OPTS_ARR=()
+        
+        if echo "$MPC_STATUS" | grep -q 'single: on'; then
+            OPTS_ARR+=("rpt 1")
+        elif echo "$MPC_STATUS" | grep -q 'repeat: on'; then
+            OPTS_ARR+=("rpt")
         fi
+        
+        if echo "$MPC_STATUS" | grep -q 'random: on'; then
+            OPTS_ARR+=("shf")
+        fi
+        
+        OPTS="${OPTS_ARR[*]}"
+
+        RAW=$(printf "%s %s %s %s %s" "$POS" "$TRACK" "$TIME" "$OPTS" "$VOL")
+        status_elements+=("$(echo "$RAW" | tr -s ' ' | sed 's/ $//')")
+
     elif [ -n "$(mpc playlist 2>/dev/null)" ]; then
         COUNT=$(mpc playlist 2>/dev/null | wc -l)
-        status_elements+=("${COUNT} song(s) queued")
+        VOL=$(mpc volume 2>/dev/null | grep -o 'volume:[ ]*[0-9]*%' | sed 's/volume:[ ]*/vol /')
+        
+        RAW=$(printf "%s song(s) queued %s" "$COUNT" "$VOL")
+        status_elements+=("$(echo "$RAW" | tr -s ' ' | sed 's/ $//')")
     fi
 
     # bt

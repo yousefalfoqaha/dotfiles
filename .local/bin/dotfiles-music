@@ -24,6 +24,20 @@ case "$SCOPE" in
 esac
 
 case "$SCOPE" in
+    volume)
+        CHANGE="${2}"
+        if [ -n "$CHANGE" ]; then
+            mpc -q volume "$CHANGE"
+        fi
+        
+        VOL=$(mpc volume | grep -oE '[0-9]+' | head -n 1)
+        [ -z "$VOL" ] && VOL=0
+        
+        notify-send -t 1000 -a 'osd' -c 'osd-progress' \
+            -h string:x-canonical-private-synchronous:music-volume \
+            -h int:value:"$VOL" "volume: music" "${VOL}%"
+        ;;
+
     add)
         CHOICE=$(mpc listall | tofi --prompt-text="add: ")
         [ -z "$CHOICE" ] && back_to_mode
@@ -98,6 +112,18 @@ case "$SCOPE" in
             STATE="repeat off"
         fi
         osd osd-text-small "$STATE"
+        ;;
+
+    shuffle)
+        RANDOM_STATE=$(mpc status | grep -o 'random: [a-z]*' | awk '{print $2}')
+        
+        if [ "$RANDOM_STATE" = "off" ]; then
+            mpc -q random on
+            osd osd-text-small "shuffle on"
+        else
+            mpc -q random off
+            osd osd-text-small "shuffle off"
+        fi
         ;;
 
     remove)

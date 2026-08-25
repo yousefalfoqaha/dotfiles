@@ -23,8 +23,28 @@ vim.o.wildmode = "longest:full,full"
 vim.g.netrw_banner = 0
 vim.o.completefunc = "menuone,noselect,popup"
 vim.opt.guicursor = "n-v-c-i:block"
+vim.opt.wildoptions = "pum,fuzzy"
 
 vim.g.vimtex_view_general_viewer = "evince"
 vim.g.vimtex_quickfix_mode = 0
 
 vim.g.nord_bold = false
+
+function _G.my_find(text, _)
+	local files = {}
+
+	local git_files = vim.fn.systemlist("git ls-files --cached --others --exclude-standard 2>/dev/null")
+	if vim.v.shell_error == 0 then
+		files = git_files
+	else
+		files = vim.fn.glob("**/*", true, true)
+	end
+
+	if text == "" then
+		return files
+	end
+
+	return vim.fn.matchfuzzy(files, text)
+end
+
+vim.opt.findfunc = "v:lua.my_find"

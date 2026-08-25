@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+MODE=$1
+DIR="$HOME/Pictures"
+mkdir -p "$DIR"
+
+GEOMETRY=$(slurp 2>/dev/null)
+
+if [ -z "$GEOMETRY" ]; then
+    exit 0
+fi
+
+if [ "$MODE" = "save" ]; then
+    FILENAME="Screenshot-$(date +'%Y-%m-%d-%H%M%S').png"
+    FILEPATH="$DIR/$FILENAME"
+    
+    grim -g "$GEOMETRY" - | tee "$FILEPATH" | wl-copy
+    
+    notify-send -h string:x-canonical-private-synchronous:screenshot -t 2000 "screenshot" "saved $FILENAME"
+else
+    grim -g "$GEOMETRY" - | wl-copy
+fi

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# 1. Watch for NATURAL queue finishes (music naturally stops)
+watch_natural_stops() {
+    while true; do
+        mpc idle player >/dev/null
+        STATUS=$(mpc status 2>/dev/null)
+
+        if echo "$STATUS" | grep -qE '\[playing\]|\[paused\]'; then continue; fi
+        if echo "$STATUS" | grep -q 'repeat: on'; then continue; fi
+        if [ -z "$(mpc playlist 2>/dev/null)" ]; then continue; fi
+
+        # Queue naturally finished
+        mpc -q clear
+        mpc -q add /
+        mpc -q shuffle    
+        mpc -q random off
+        playerctl --player=mpd play 2>/dev/null || true
+        
+        notify-send -t 2000 -a 'osd' -c 'osd-text-large' \
+            -h string:x-canonical-private-synchronous:media "queue finished: playing library mix"
+    done
+}
+
+# 2. Watch for MANUAL media keys (intercepts DBus so media keys stay vanilla)
+watch_media_keys() {
+    dbus-monitor "type='method_call',interface='org.mpris.MediaPlayer2.Player'" 2>/dev/null | \
+    while read -r line; do
+        if echo "$line" | grep -qE 'member="(Play|PlayPause|Next|Previous)"'; then
+            
+            # If MPD's queue is completely empty
+            if [ -z "$(mpc playlist 2>/dev/null)" ]; then
+                
+                # Check if another app (like Firefox/Spotify) is actively being controlled.
+                # We only inject the mix if nothing else is playing.
+                OTHER_STATE=$(playerctl status 2>/dev/null || echo "Stopped")
+                
+                if [[ "$OTHER_STATE" != "Playing" && "$OTHER_STATE" != "Paused" ]]; then
+                    mpc -q clear
+                    mpc -q add /
+                    mpc -q shuffle
+                    mpc -q random off
+                    
+                    # Fire MPD playback directly
+                    playerctl --player=mpd play 2>/dev/null || true
+                    
+                    notify-send -t 2000 -a 'osd' -c 'osd-text-large' \
+                        -h string:x-canonical-private-synchronous:media "auto-dj: playing library mix"
+                fi
+            fi
+        fi
+    done
+}
+
+# Run both watchers simultaneously in the background
+watch_natural_stops &
+watch_media_keys &
+
+# Keep the script alive
+wait
