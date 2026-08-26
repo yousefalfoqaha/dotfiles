@@ -1,6 +1,6 @@
 # dotfiles
 
-my personal, minimal setup that embraces the defaults. built for achieving absolute flow state.
+my personal, minimal setup that embraces the defaults. built for getting work done.
 
 ![desktop](assets/desktop.png)
 
