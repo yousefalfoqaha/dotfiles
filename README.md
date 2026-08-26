@@ -11,7 +11,7 @@ my personal, minimal setup that embraces the defaults. built for achieving absol
 - entirely driven by keyboard shortcuts.
 - extensible theme switcher based on the `base16` convention with live reload.
 - standard developer tooling such as `nvim`, `podman`, `tmux`, and `mise`.
-- keyboard-only, local music player.
+- keyboard-only, local music player with YouTube downloading.
 - non-negotiable functionality like screensharing, shared clipboard, screenshots, nightlight and more.
 
 ## bootstrap
