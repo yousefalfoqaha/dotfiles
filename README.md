@@ -191,7 +191,7 @@ FONT_MENU_SIZE=13
 
 ## shell
 
-`foot` is the terminal emulator used due to its simplicity (I think you're catching the pattern). you can fire up a terminal via `Super+Return`.
+`foot` is the terminal emulator used due to its simplicity (i think you're catching the pattern). you can fire up a terminal via `Super+Return`.
 Here are some of the core shell tools installed and configured:
 
 - `mise`: per-project language runtimes, useful for managing multiple language SDKs per-project, running tasks and overall project isolation.
@@ -215,7 +215,7 @@ the default `vim.pack` package manager is used to install some plugins:
 - `conform`: used to assign formatters to file types, and format on save.
 - a plethora of themes that work with the theme switcher.
 
-### languages support
+### languages
 
 a new language can be set up by dropping a file in `lua/packs/langs/`. each pack declares its mason packages, treesitter parsers, lsp servers, formatters, and an optional setup hook.
 here's the `java.lua` pack as an example:
@@ -242,7 +242,7 @@ return {
 }
 ```
 
-### custom commands
+### commands
 
 you can set the neovim colorscheme manually with the custom `:Theme <name>` command, and unlike `:colorscheme`, it persists the colorscheme on restarts.
 
