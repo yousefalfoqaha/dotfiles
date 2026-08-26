@@ -19,6 +19,7 @@ vim.pack.add({
 	{ src = github("metalelf0/black-metal-theme-neovim") },
 
 	-- languages
+	{ src = github("iamcco/markdown-preview.nvim") },
 	{ src = github("nvim-treesitter/nvim-treesitter") },
 	{ src = github("neovim/nvim-lspconfig") },
 	{ src = github("stevearc/conform.nvim") },
