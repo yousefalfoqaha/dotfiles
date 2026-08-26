@@ -10,7 +10,7 @@ my personal, minimal setup that embraces the defaults. built to actually get wor
 - terminal-centeric workflow which embraces the defaults and standard GNU tools, with no bloat or aliases.
 - entirely driven by keyboard shortcuts.
 - extensible theme switcher based on the `base16` convention with system-wide live reload.
-- standard developer tooling such as `nvim`, `podman`, `tmux`, and `mise`, with a declarative neovim language pack system.
+- standard dev tooling such as `nvim`, `podman`, `tmux`, and `mise`, with a declarative `nvim` language pack system.
 - keyboard-only, local music player with YouTube downloading.
 - non-negotiable functionality like screensharing, shared clipboard, screenshots, nightlight and more.
 
