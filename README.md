@@ -1,6 +1,6 @@
 # dotfiles
 
-my personal, minimal setup that embraces the defaults. built for getting work done.
+my personal, minimal setup that embraces the defaults. built to actually get work done.
 
 ![desktop](assets/desktop.png)
 
