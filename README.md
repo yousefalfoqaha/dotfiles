@@ -61,7 +61,7 @@ cd ~/dotfiles
 
 ## window manager
 
-`sway` was used because it's one of the most stable Wayland tiling compositor out there, plus it comes with many goodies out of the box.
+`sway` was used because it's one of the most stable Wayland tiling compositors out there, plus it comes with many goodies out of the box.
 
 ![window-manager](assets/window-manager.png)
 
