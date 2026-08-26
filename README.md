@@ -287,7 +287,7 @@ these packages take care of many common functions that a setup in my opinion _sh
 
 - `wlsunset`: used to toggle a nightlight filter (`Super+Shift+N`).
 - `wl-clipboard`: provides a shared clipboard across Wayland windows.
-- `grim + slurp`: `Print` copies a region to the clipboard; `Shift+Print` saves to `~/Pictures/screenshots`.
+- `grim` + `slurp`: `Print` copies a region to the clipboard; `Shift+Print` saves to `~/Pictures/screenshots`.
 - `xdg-desktop-portal-wlr`: screensharing monitors or specific windows.
 - `xdg-desktop-portal-gtk`: used for GTK-based dialogs and services (like file-pickers).
 
