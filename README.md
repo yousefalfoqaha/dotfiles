@@ -312,7 +312,7 @@ for example, `Super+Alt+C` shows the date and time.
 while the terminal is great for most usecases on Linux, some graphical apps still have a place.
 
 - `firefox`: web browser of my choice.
-- `libreoffice`: the open source microsoft suite, I have this for uni group projects.
+- `libreoffice`: the open source microsoft suite, i have this for university group projects.
 
 ### viewing documents
 
