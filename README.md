@@ -26,9 +26,43 @@ cd ~/dotfiles
 
 > rebooting is advised after running these scripts
 
+## structure
+
+```
+.
+├── install.sh
+├── symlink.sh
+├── service.sh
+├── .bashrc
+├── .bash_profile
+├── .inputrc
+├── assets/
+├── .config/
+│   ├── dotfiles/paths.sh    # shared state dir paths
+│   ├── fonts/               # font presets (*.sh)
+│   ├── foot/foot.ini
+│   ├── mise/config.toml
+│   ├── mpd/mpd.conf
+│   ├── nvim/                # editor config (init.lua, lua/, per-lang packs)
+│   ├── sway/
+│   ├── themes/              # presets/ + hooks/ (the base16 theming engine)
+│   ├── tmux/tmux.conf
+│   ├── tofi/config
+│   └── xdg-desktop-portal-wlr/config
+└── .local/
+    ├── bin/                 # bash logic behind the setup
+    │   ├── dotfiles-status  # the swaybar loop
+    │   ├── dotfiles-theme   # the theme switcher
+    │   ├── dotfiles-music   # the music player
+    │   └── ...              # and more (bluetooth, wifi, screenshots, nightlight, ...)
+    └── share/backgrounds/    # wallpapers
+```
+
 ## window manager
 
 `sway` was used because it's one of the most stable Wayland tiling compositor out there, plus it comes with many goodies out of the box.
+
+![window-manager](assets/window-manager.png)
 
 ### swaybar
 
@@ -40,6 +74,8 @@ a simple status bar that relies on a custom `bash` loop to show the following st
 - system volume percent (or muted)
 - battery percent and charging state
 - the time
+
+![bar](assets/bar.png)
 
 ### swaybg
 
@@ -55,6 +91,13 @@ back on any input.
 ### lockscreen
 
 you know, i've debated installing a display manager, but the default `agetty` is good enough for me.
+
+## dynamic menu
+
+`tofi` is a lightweight dynamic menu for Wayland that can be used to launch applications.
+you will see it used a lot in this setup due to its ability to integrate with the shell scripts responsible for performing actions like changing themes/fonts/backgrounds, system actions, choosing a document, connecting to bluetooth/wifi devices, etc.
+
+![dynamic-menu](assets/dynamic-menu.png)
 
 ## keybinds
 
