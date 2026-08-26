@@ -201,16 +201,21 @@ Here are some of the core shell tools installed and configured:
 - `openssh`: SSH into machines, and setup an SSH server for remote work.
 - `opencode`: blasphemy, but a good AI agent I use a lot.
 
-### neovim
+## text editor
 
 `nvim` is the editor of choice.
 i try to run all stock (no keybinds, fuzzy pickers, statuslines, etc.) as i frequently SSH into remote servers.
+
+### plugins
+
 the default `vim.pack` package manager is used to install some plugins:
 
 - `treesitter`: parses code to display colorschemes beautifully, genuniely helps with readability.
 - `mason` + `lspconfig`: `mason` is a language server package manager, while `lspconfig` provides reasonable LSP defaults.
 - `conform`: used to assign formatters to file types, and format on save.
 - a plethora of themes that work with the theme switcher.
+
+### languages support
 
 a new language can be set up by dropping a file in `lua/packs/langs/`. each pack declares its mason packages, treesitter parsers, lsp servers, formatters, and an optional setup hook.
 here's the `java` pack as an example:
@@ -236,6 +241,8 @@ return {
 	end,
 }
 ```
+
+### custom commands
 
 you can set the neovim colorscheme manually with the custom `:Theme <name>` command, and unlike `:colorscheme`, it persists the colorscheme on restarts.
 
