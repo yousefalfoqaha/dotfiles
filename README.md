@@ -7,10 +7,11 @@ my personal, minimal setup that embraces the defaults. built for achieving absol
 ## features
 
 - no flashy animations, heavy effects, or anime waifu girls.
-- terminal-centeric workflow which embraces the defaults and standard GNU tools, with no bloat or any aliases.
+- terminal-centeric workflow which embraces the defaults and standard GNU tools, with no bloat or aliases.
 - entirely driven by keyboard shortcuts.
-- extensible theme switcher based on the `base16` convention with live reload (see [theme switcher](#theming)).
+- extensible theme switcher based on the `base16` convention with live reload.
 - standard developer tooling such as `nvim`, `podman`, `tmux`, and `mise`.
+- keyboard-only, local music player.
 - non-negotiable functionality like screensharing, shared clipboard, screenshots, nightlight and more.
 
 ## bootstrap
