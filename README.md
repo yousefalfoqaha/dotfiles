@@ -250,7 +250,7 @@ i also changed the native `find:` command to fuzzy-search files globally, with `
 
 ## music player
 
-a keyboard-only music player built on `mpd`, to play the `~/Music` directory.
+a keyboard-only local music player built on `mpd` with vim-like keybinds.
 
 drop music into `~/Music`, then press `Super+M` to enter music mode (keybinds below).
 you can browse the queue, add from the library, seek, shuffle, repeat, and clear the queue.
