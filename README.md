@@ -194,7 +194,7 @@ FONT_MENU_SIZE=13
 `foot` is the terminal emulator used due to its simplicity (i think you're catching the pattern). you can fire up a terminal via `Super+Return`.
 Here are some of the core shell tools installed and configured:
 
-- `mise`: per-project language runtimes, useful for managing multiple language SDKs per-project, running tasks and overall project isolation.
+- `mise`: per-project language runtimes, useful for managing multiple language SDKs per-project, running tasks, and overall project isolation.
 - `tmux`: terminal multiplexer, appearance was changed a little to fit the overall vibe of the setup, while still looking regular (default tmux looks disgusting).
 - `podman`: completely open source Docker alternative that doesn't rely on a daemon.
 - `bash-completion`: provides autocomplete options for many shell tools.
