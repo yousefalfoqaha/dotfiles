@@ -228,6 +228,31 @@ the default `vim.pack` package manager is used to install some plugins:
 - `conform`: used to assign formatters to file types, and format on save.
 - a plethora of themes that work with the theme switcher.
 
+a new language can be set up by dropping a file in `lua/packs/langs/`. each pack declares its mason packages, treesitter parsers, lsp servers, formatters, and an optional setup hook.
+here's the `java` pack as an example:
+
+```lua
+return {
+	mason_install = { "jdtls", "google-java-format" },  -- tools for mason to install
+	treesitter_parsers = { "java" },                    -- syntax highlighting
+	lsp_configs = {
+		jdtls = {                                       -- the lsp server and its settings
+			settings = {
+				java = {
+					signatureHelp = { enabled = true },
+				},
+			},
+		},
+	},
+	formatters_by_ft = {
+		java = { "google-java-format" },                -- formatter assigned to the filetype
+	},
+	setup = function(mason_path)                        -- runs once on startup
+		vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. mason_path .. "/packages/jdtls/lombok.jar"
+	end,
+}
+```
+
 you can set the neovim colorscheme manually with the custom `:Theme <name>` command, and unlike `:colorscheme`, it persists the colorscheme on restarts.
 
 i also changed the native `find:` command to fuzzy-search files globally, with `.gitignore` integration.
