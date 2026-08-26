@@ -218,7 +218,7 @@ the default `vim.pack` package manager is used to install some plugins:
 ### languages support
 
 a new language can be set up by dropping a file in `lua/packs/langs/`. each pack declares its mason packages, treesitter parsers, lsp servers, formatters, and an optional setup hook.
-here's the `java` pack as an example:
+here's the `java.lua` pack as an example:
 
 ```lua
 return {
