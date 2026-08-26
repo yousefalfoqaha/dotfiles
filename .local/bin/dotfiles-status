@@ -11,76 +11,75 @@ done
 while true; do
     status_elements=()
 
-    # music
+    # MUSIC
     MPC_STATUS=$(mpc status 2>/dev/null)
     
-    if echo "$MPC_STATUS" | grep -qE '\[playing\]|\[paused\]'; then
-        POS=$(echo "$MPC_STATUS" | grep -oE '#[0-9]+/[0-9]+' | tr -d '#')
-        TRACK=$(basename "$(mpc current 2>/dev/null)" | sed 's/\.[^.]*$//')
+    if [[ "$MPC_STATUS" == *"[playing]"* ]] || [[ "$MPC_STATUS" == *"[paused]"* ]]; then
+        [[ "$MPC_STATUS" =~ \#([0-9]+/[0-9]+) ]] && POS="${BASH_REMATCH[1]}"
+        [[ "$MPC_STATUS" =~ ([0-9]+:[0-9]+/[0-9]+:[0-9]+) ]] && TIME="${BASH_REMATCH[1]}"
+        [[ "$MPC_STATUS" =~ volume:[[:space:]]*([0-9]+%) ]] && VOL="vol ${BASH_REMATCH[1]}"
+
+        TRACK=$(mpc current 2>/dev/null)
+        TRACK="${TRACK##*/}"
+        TRACK="${TRACK%.*}"
         TRACK="${TRACK:0:75}$([[ ${#TRACK} -gt 75 ]] && echo "…")"
-        TIME=$(echo "$MPC_STATUS" | grep -oE '[0-9]+:[0-9]+/[0-9]+:[0-9]+' | head -n 1)
-        VOL=$(echo "$MPC_STATUS" | grep -o 'volume:[ ]*[0-9]*%' | sed 's/volume:[ ]*/vol /')
 
         OPTS_ARR=()
-        
-        if echo "$MPC_STATUS" | grep -q 'single: on'; then
-            OPTS_ARR+=("rpt 1")
-        elif echo "$MPC_STATUS" | grep -q 'repeat: on'; then
-            OPTS_ARR+=("rpt")
-        fi
-        
-        if echo "$MPC_STATUS" | grep -q 'random: on'; then
-            OPTS_ARR+=("shf")
-        fi
-        
+        [[ "$MPC_STATUS" == *"single: on"* ]] && OPTS_ARR+=("rpt 1") \
+        || { [[ "$MPC_STATUS" == *"repeat: on"* ]] && OPTS_ARR+=("rpt"); }
+        [[ "$MPC_STATUS" == *"random: on"* ]] && OPTS_ARR+=("shf")
+
         OPTS="${OPTS_ARR[*]}"
+        RAW="$POS $TRACK $TIME $OPTS $VOL"
+        status_elements+=("${RAW//  / }") 
 
-        RAW=$(printf "%s %s %s %s %s" "$POS" "$TRACK" "$TIME" "$OPTS" "$VOL")
-        status_elements+=("$(echo "$RAW" | tr -s ' ' | sed 's/ $//')")
-
-    elif [ -n "$(mpc playlist 2>/dev/null)" ]; then
+    elif [[ -n "$(mpc playlist 2>/dev/null)" ]]; then
         COUNT=$(mpc playlist 2>/dev/null | wc -l)
-        VOL=$(mpc volume 2>/dev/null | grep -o 'volume:[ ]*[0-9]*%' | sed 's/volume:[ ]*/vol /')
-        
-        RAW=$(printf "%s song(s) queued %s" "$COUNT" "$VOL")
-        status_elements+=("$(echo "$RAW" | tr -s ' ' | sed 's/ $//')")
+        [[ "$MPC_STATUS" =~ volume:[[:space:]]*([0-9]+%) ]] && VOL="vol ${BASH_REMATCH[1]}"
+        RAW="$COUNT song(s) queued $VOL"
+        status_elements+=("${RAW//  / }")
     fi
 
-    # bt
-    if command -v bluetoothctl >/dev/null 2>&1 && bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
-        BT_CONNS=$(bluetoothctl devices Connected 2>/dev/null | wc -l)
-        if [ "$BT_CONNS" -gt 0 ]; then
-            status_elements+=("bt ${BT_CONNS}")
-        else
-            status_elements+=("bt")
-        fi
+    # BLUETOOTH
+    BT_DEVS=$(bluetoothctl devices Connected 2>/dev/null)
+    if [[ -n "$BT_DEVS" ]]; then
+        BT_CONNS=$(echo "$BT_DEVS" | wc -l)
+        status_elements+=("bt ${BT_CONNS}")
+    else
+        status_elements+=("bt")
     fi
 
-    # net
-    if command -v nmcli >/dev/null 2>&1; then
-        if nmcli -t -f TYPE,STATE dev 2>/dev/null | grep -q -E '^(wifi|802-11-wireless):connected'; then
-            SIGNAL=$(nmcli -t -f IN-USE,SIGNAL dev wifi 2>/dev/null | grep '^\*' | cut -d':' -f2 | head -n1)
-            status_elements+=("wifi ${SIGNAL}%")
-        elif nmcli -t -f TYPE,STATE dev 2>/dev/null | grep -q -E '^(ethernet|802-3-ethernet):connected'; then
-            status_elements+=("eth")
-        else
-            status_elements+=("offline")
-        fi
+    # NETWORK
+    NM_OUT=$(nmcli -t -f TYPE,STATE dev 2>/dev/null)
+    if [[ "$NM_OUT" == *"wifi:connected"* ]] || [[ "$NM_OUT" == *"802-11-wireless:connected"* ]]; then
+        WIFI_OUT=$(nmcli -t -f IN-USE,SIGNAL dev wifi 2>/dev/null)
+        [[ "$WIFI_OUT" =~ \*+:([0-9]+) ]] && SIGNAL="${BASH_REMATCH[1]}"
+        status_elements+=("wifi ${SIGNAL}%")
+    elif [[ "$NM_OUT" == *"ethernet:connected"* ]] || [[ "$NM_OUT" == *"802-3-ethernet:connected"* ]]; then
+        status_elements+=("eth")
+    else
+        status_elements+=("offline")
     fi
 
-    # vol
+    # VOLUME
     VOL_RAW=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null || echo "Volume: 0")
     if [[ "$VOL_RAW" == *"MUTED"* ]]; then
         status_elements+=("muted")
     else
-        VOL_PCT=$(echo "$VOL_RAW" | awk '{print int($2 * 100)}')
+        [[ "$VOL_RAW" =~ [0-9]+\.[0-9]+ ]] && VOL_NUM="${BASH_REMATCH[0]}"
+        VOL_PCT=${VOL_NUM/./}
+        VOL_PCT=$((10#$VOL_PCT)) 
         status_elements+=("vol ${VOL_PCT}%")
     fi
 
-    # bat
-    if [ -n "$BAT_DIR" ] && [ -f "$BAT_DIR/capacity" ]; then
-        BAT_CAP=$(< "$BAT_DIR/capacity")
-        BAT_STAT=$(< "$BAT_DIR/status")
+    # BATTERY
+    if [[ -f "$BAT_DIR/uevent" ]]; then
+        while IFS='=' read -r key val; do
+            case "$key" in
+                POWER_SUPPLY_CAPACITY) BAT_CAP="$val" ;;
+                POWER_SUPPLY_STATUS)   BAT_STAT="$val" ;;
+            esac
+        done < "$BAT_DIR/uevent"
         
         case "$BAT_STAT" in
             "Charging")    status_elements+=("chr ${BAT_CAP}%") ;;
@@ -89,9 +88,11 @@ while true; do
         esac
     fi
 
-    # time
-    status_elements+=("$(date +'%I:%M %p')")
+    # TIME
+    printf -v TIME_STR "%(%I:%M %p)T" -1
+    status_elements+=("$TIME_STR")
 
+    # OUTPUT
     printf -v joined "%s :: " "${status_elements[@]}"
     echo "${joined% :: }"
 
