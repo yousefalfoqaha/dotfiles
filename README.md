@@ -131,23 +131,6 @@ you will see it used a lot in this setup due to its ability to integrate with th
 | `Print` / `Shift+Print` | screenshot copy / save                   |
 | `Super+M`               | music mode                               |
 
-### music mode (entered with Super+M):
-
-| key               | action                           |
-| ----------------- | -------------------------------- |
-| `Return`          | queue browser                    |
-| `a`               | add from library                 |
-| `p`               | play/pause                       |
-| `j` / `k`         | next / previous                  |
-| `r`               | repeat (off -> repeat -> single) |
-| `d`               | remove current from queue        |
-| `s`               | shuffle                          |
-| `x`               | clear queue                      |
-| `h` / `l`         | seek -10s / +10s                 |
-| `0..9`            | seek to 0/10/.../90%             |
-| `vol+` / `vol-`   | music volume                     |
-| `Esc` / `Super+M` | exit mode                        |
-
 > media keys (volume, mute, mic mute, play/pause, next, prev, stop, brightness)
 > work without a mode.
 
@@ -261,12 +244,33 @@ i also changed the native `find:` command to fuzzy-search files globally, with `
 
 a keyboard-only music player built on `mpd`, to play the `~/Music` directory.
 
-drop music into `~/Music`, then press `Super+M` to enter music mode (keybinds above).
+drop music into `~/Music`, then press `Super+M` to enter music mode (keybinds below).
 you can browse the queue, add from the library, seek, shuffle, repeat, and clear the queue.
+
+### music player keybinds:
+
+| key               | action                           |
+| ----------------- | -------------------------------- |
+| `Return`          | queue browser                    |
+| `a`               | add from library                 |
+| `p`               | play/pause                       |
+| `j` / `k`         | next / previous                  |
+| `r`               | repeat (off -> repeat -> single) |
+| `d`               | remove current from queue        |
+| `s`               | shuffle                          |
+| `x`               | clear queue                      |
+| `h` / `l`         | seek -10s / +10s                 |
+| `0..9`            | seek to 0/10/.../90%             |
+| `vol+` / `vol-`   | music volume                     |
+| `Esc` / `Super+M` | exit mode                        |
+
+### auto-DJ
 
 an auto-DJ starts when the queue finishes, or when you hit play on an empty queue, it loads a shuffled mix of your whole library.
 
-to grab music from YouTube, run `music-dl <url>` (or `music-dl -a <album> <url>` to put it in its own folder).
+### download from YouTube
+
+run `music-dl <url>` (or `music-dl -a <album> <url>` to put it in its own folder).
 it drops the downloaded mp3 into `~/Music` (or `~/Music/<album>`).
 
 ## system utils
