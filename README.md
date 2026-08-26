@@ -210,7 +210,7 @@ i try to run all stock (no keybinds, fuzzy pickers, statuslines, etc.) as i freq
 
 the default `vim.pack` package manager is used to install some plugins:
 
-- `treesitter`: parses code to display colorschemes beautifully, genuniely helps with readability.
+- `treesitter`: parses code to display colorschemes beautifully, genuinely helps with readability.
 - `mason` + `lspconfig`: `mason` is a language server package manager, while `lspconfig` provides reasonable LSP defaults.
 - `conform`: used to assign formatters to file types, and format on save.
 - a plethora of themes that work with the theme switcher.
