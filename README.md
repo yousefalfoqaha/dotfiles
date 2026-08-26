@@ -199,7 +199,7 @@ Here are some of the core shell tools installed and configured:
 - `podman`: completely open source Docker alternative that doesn't rely on a daemon.
 - `bash-completion`: provides autocomplete options for many shell tools.
 - `openssh`: SSH into machines, and setup an SSH server for remote work.
-- `opencode`: blasphemy, but a good AI agent I use a lot.
+- `opencode`: blasphemy, but a good AI agent i use a lot.
 
 ## text editor
 
