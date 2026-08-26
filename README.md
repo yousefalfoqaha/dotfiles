@@ -255,7 +255,7 @@ a keyboard-only local music player built on `mpd` with vim-like keybinds.
 drop music into `~/Music`, then press `Super+M` to enter music mode (keybinds below).
 you can browse the queue, add from the library, seek, shuffle, repeat, and clear the queue.
 
-### music player keybinds:
+### keybinds:
 
 | key               | action                           |
 | ----------------- | -------------------------------- |
