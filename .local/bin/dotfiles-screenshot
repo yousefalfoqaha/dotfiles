@@ -15,7 +15,8 @@ if [ "$MODE" = "save" ]; then
     FILEPATH="$DIR/$FILENAME"
     
     grim -g "$GEOMETRY" - | tee "$FILEPATH" | wl-copy
-    notify-send -h string:x-canonical-private-synchronous:screenshot -t 2000 "screenshot" "saved $FILENAME"
+    notify-send -h string:x-canonical-private-synchronous:screenshot -t 4000 "screenshot" "saved as $FILENAME"
 else
     grim -g "$GEOMETRY" - | wl-copy
+    notify-send -h string:x-canonical-private-synchronous:screenshot -t 4000 "screenshot" "saved to clipboard"
 fi
