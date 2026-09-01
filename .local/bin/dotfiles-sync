@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+DOTFILES_DIR="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
+
+if [ -f "$DOTFILES_DIR/.config/dotfiles/paths.sh" ]; then
+    source "$DOTFILES_DIR/.config/dotfiles/paths.sh"
+elif [ -f "$HOME/.config/dotfiles/paths.sh" ]; then
+    source "$HOME/.config/dotfiles/paths.sh"
+else
+    echo "Error: paths.sh could not be found." >&2
+    exit 1
+fi
+
+echo "pulling changes..."
+git -C "$DOTFILES_DIR" pull
+
+echo "starting system sync..."
+
+CORE_PKGS=(
+    # wayland desktop 
+    sway swaybg swayidle xdg-desktop-portal-wlr xdg-desktop-portal-gtk xorg-xwayland
+    # system
+    grim slurp wl-clipboard mako libnotify wlsunset brightnessctl bluez bluez-utils networkmanager pipewire-pulse mpd mpc mpd-mpris playerctl
+    # build
+    base-devel
+    # shell
+    foot bash-completion tmux openssh man-db man-pages mise podman opencode
+    # graphical
+    firefox zathura zathura-pdf-mupdf libreoffice-fresh
+    # fonts
+    noto-fonts noto-fonts-emoji ttf-iosevka-nerd ttf-jetbrains-mono-nerd ttf-liberation
+)
+
+AUR_PKGS=(
+    neovim-nightly-bin tofi
+)
+
+echo "installing native packages..."
+sudo pacman -Syu --needed --noconfirm "${CORE_PKGS[@]}"
+
+if ! command -v yay &> /dev/null; then
+    echo "Installing yay..."
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    (cd /tmp/yay && makepkg -si --noconfirm)
+    rm -rf /tmp/yay
+fi
+
+echo "installing AUR packages..."
+yay -S --needed --noconfirm "${AUR_PKGS[@]}"
+
+echo "installing language runtimes via mise..."
+mise install
+
+echo "install complete."
+
+echo "creating base directories..."
+mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state/theme" "$HOME/Music"
+
+rm -rf "$HOME/.config/backgrounds"
+
+echo "symlinking top-level hidden files..."
+TOP_LEVEL_FILES=(
+    ".bashrc"
+    ".bash_profile"
+    ".inputrc"
+)
+
+for file in "${TOP_LEVEL_FILES[@]}"; do
+    if [[ -f "$DOTFILES_DIR/$file" ]]; then
+        rm -f "$HOME/$file"
+        ln -s "$DOTFILES_DIR/$file" "$HOME/$file"
+        echo " -> $file"
+    fi
+done
+
+echo "symlinking .config directories..."
+for item in "$DOTFILES_DIR/.config"/*; do
+    if [[ -e "$item" ]]; then
+        base=$(basename "$item")
+        rm -rf "$HOME/.config/$base"
+        ln -s "$item" "$HOME/.config/$base"
+        echo " -> .config/$base"
+    fi
+done
+
+echo "symlinking .local/bin scripts..."
+for item in "$DOTFILES_DIR/.local/bin"/*; do
+    if [[ -e "$item" ]]; then
+        base=$(basename "$item")
+        rm -f "$HOME/.local/bin/$base"
+        ln -s "$item" "$HOME/.local/bin/$base"
+        echo " -> .local/bin/$base"
+    fi
+done
+
+echo "symlinking .local/share data..."
+for item in "$DOTFILES_DIR/.local/share"/*; do
+    if [[ -e "$item" ]]; then
+        base=$(basename "$item")
+        rm -rf "$HOME/.local/share/$base"
+        ln -s "$item" "$HOME/.local/share/$base"
+        echo " -> .local/share/$base"
+    fi
+done
+
+echo "symlinking complete."
+
+echo "enabling system services (requires sudo)..."
+sudo systemctl enable --now bluetooth NetworkManager
+
+echo "enabling user services..."
+mkdir -p ~/.local/share/mpd 
+systemctl --user enable --now mpd mpd-mpris
+
+echo "services configured."
+
+if [ -f "$DOTFILES_THEME_STATE/preset" ]; then
+    "$HOME/.local/bin/dotfiles-theme" "$(cat "$DOTFILES_THEME_STATE/preset")" &
+fi
+
+notify-send "dotfiles" "configuration synced"

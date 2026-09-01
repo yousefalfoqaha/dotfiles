@@ -31,6 +31,11 @@ EOF
 ESC=$'\033'
 BEL=$'\a'
 
+if [ -z "$B00" ]; then
+    echo "Error: Theme variables are empty. Check variable names in base16.sh" >&2
+    exit 1
+fi
+
 SEQ="${ESC}]10;${B05}${BEL}"
 SEQ+="${ESC}]11;${B00}${BEL}"
 SEQ+="${ESC}]4;0;${B00}${BEL}"

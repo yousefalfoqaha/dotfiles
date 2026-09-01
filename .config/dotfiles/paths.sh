@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+DOTFILES_DIR="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
 export DOTFILES_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export DOTFILES_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 

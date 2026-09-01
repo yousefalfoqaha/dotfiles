@@ -1,5 +1,5 @@
 NVIM_THEME="material-oceanic"
-BACKGROUND="starry_night.jpg"
+BACKGROUND="forest_highway.jpg"
 
 B00="#25363B"
 B01="#1C2C30"

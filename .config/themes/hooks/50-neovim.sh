@@ -8,6 +8,6 @@ if [ -n "$NVIM_THEME" ]; then
     ln -sfn "$DOTFILES_THEME_STATE/neovim" "$DOTFILES_DATA_HOME/nvim/theme"
 
     for server in $(find "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" -maxdepth 1 -name "nvim.*.0" -type s 2>/dev/null); do
-        nvim --server "$server" --remote-send "<C-\><C-n>:Theme ${NVIM_THEME}<CR><C-\><C-n>:restart<CR>" 2>/dev/null &
+        nvim --server "$server" --remote-send "<C-\><C-n>:Theme ${NVIM_THEME}<CR><C-\><C-n>:restart<CR>" < /dev/null > /dev/null 2>&1 &
     done
 fi
