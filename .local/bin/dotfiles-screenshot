@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+if pkill -x slurp; then
+    exit 0
+fi
+
 MODE=$1
 DIR="$HOME/Pictures"
 mkdir -p "$DIR"
