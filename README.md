@@ -23,7 +23,7 @@ cd ~/dotfiles
 ./bootstrap.sh
 ```
 
-> run `dotfiles-sync` to apply updates and keep packages and symlinks in sync.
+> optional: run `dotfiles-sync` to apply updates and keep packages and symlinks in sync.
 
 ## structure
 
