@@ -20,12 +20,10 @@ my personal, minimal setup that embraces the defaults. built to actually get wor
 git clone git@github.com:yousefalfoqaha/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
-./install.sh     # pacman + yay + mise
-./symlink.sh     # symlinks to .config/*, .local/bin/*, .local/share/*
-./service.sh     # enables systemd services
+./bootstrap.sh
 ```
 
-> rebooting is advised after running these scripts
+> run `dotfiles-sync` to apply updates and keep packages and symlinks in sync.
 
 ## structure
 
