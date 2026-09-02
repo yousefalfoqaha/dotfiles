@@ -29,9 +29,7 @@ cd ~/dotfiles
 
 ```
 .
-├── install.sh
-├── symlink.sh
-├── service.sh
+├── bootstrap.sh
 ├── .bashrc
 ├── .bash_profile
 ├── .inputrc
