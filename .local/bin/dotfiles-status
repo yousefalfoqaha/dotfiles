@@ -50,12 +50,40 @@ while true; do
     fi
 
     # NETWORK
-    NM_OUT=$(nmcli -t -f TYPE,STATE dev 2>/dev/null)
-    if [[ "$NM_OUT" == *"wifi:connected"* ]] || [[ "$NM_OUT" == *"802-11-wireless:connected"* ]]; then
-        WIFI_OUT=$(nmcli -t -f IN-USE,SIGNAL dev wifi 2>/dev/null)
-        [[ "$WIFI_OUT" =~ \*+:([0-9]+) ]] && SIGNAL="${BASH_REMATCH[1]}"
-        status_elements+=("wifi ${SIGNAL}%")
-    elif [[ "$NM_OUT" == *"ethernet:connected"* ]] || [[ "$NM_OUT" == *"802-3-ethernet:connected"* ]]; then
+    WIFI_CONN=0
+    ETH_CONN=0
+    WIFI_DEV=""
+
+    # networkctl list returns: IDX LINK TYPE OPERATIONAL SETUP
+    while read -r _ link type oper _; do
+        if [[ "$oper" == "routable" || "$oper" == "degraded" ]]; then
+            if [[ "$type" == "wlan" ]]; then
+                WIFI_CONN=1
+                WIFI_DEV="$link"
+            elif [[ "$type" == "ether" ]]; then
+                ETH_CONN=1
+            fi
+        fi
+    done < <(networkctl list --no-legend 2>/dev/null)
+
+    if (( WIFI_CONN )); then
+        # networkctl doesn't provide signal strength natively.
+        # If available, we use iwctl (iwd) to fetch RSSI and convert to %.
+        if command -v iwctl >/dev/null 2>&1; then
+            RSSI=$(iwctl station "$WIFI_DEV" show 2>/dev/null | grep -i 'AverageRSSI' | awk '{print $2}')
+            if [[ -n "$RSSI" ]]; then
+                # Convert dBm to a rough percentage (-50dBm = ~100%, -100dBm = ~0%)
+                SIGNAL=$(( 2 * (RSSI + 100) ))
+                [[ $SIGNAL -gt 100 ]] && SIGNAL=100
+                [[ $SIGNAL -lt 0 ]] && SIGNAL=0
+                status_elements+=("wifi ${SIGNAL}%")
+            else
+                status_elements+=("wifi")
+            fi
+        else
+            status_elements+=("wifi")
+        fi
+    elif (( ETH_CONN )); then
         status_elements+=("eth")
     else
         status_elements+=("offline")
